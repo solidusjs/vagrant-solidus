@@ -20,7 +20,7 @@ Among other things, Pow enables port proxying on your Mac, to let you route all 
 To get started, clone this repo, and install a required Vagrant plugin:
 
 ```
-$ git clone https://github.com/SparkartGroupInc/sites.git
+$ git clone https://github.com/solidusjs/solidus-devbox
 $ vagrant plugin install listen
 ```
 
