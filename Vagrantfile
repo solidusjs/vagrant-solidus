@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Dev happiness
   config.vm.network :private_network, ip: "192.168.33.11"
-  20.times do |i|
+  15.times do |i|
     port = VagrantPlugins::CommandSite::SiteHelpers::BASE_PORT + i
     config.vm.network :forwarded_port, guest: port, host: port
 
