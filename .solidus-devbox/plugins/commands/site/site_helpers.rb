@@ -112,7 +112,7 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_node_packages
-        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm install")
+        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm install --no-bin-links")
       end
 
       #########################################################################
