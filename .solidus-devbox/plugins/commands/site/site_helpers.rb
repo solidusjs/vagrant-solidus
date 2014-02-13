@@ -202,7 +202,8 @@ module VagrantPlugins
           @site_template_git_url = url
         end
         opts.on("-p", "--template-path [PATH]", "Path of the Solidus site template to use, instead of the Git repository", "Must be relative to the Vagrantfile's directory") do |path|
-          @site_template_host_path = File.join(ROOT_HOST_PATH, path)
+          @site_template_host_path  = File.join(ROOT_HOST_PATH, path)
+          @site_template_guest_path = File.join(ROOT_GUEST_PATH, path)
         end
       end
 
