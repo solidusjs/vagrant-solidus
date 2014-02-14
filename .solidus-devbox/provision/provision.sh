@@ -39,8 +39,14 @@ rvm use --default ruby-1.9.3-p484 > /dev/null # Using echoerr here doesn't work,
 echo "Installing sass"
 echoerr gem install sass
 
+echo "Installing dos2unix"
+echoerr sudo apt-get install -y dos2unix
+
 echo "Setuping bash"
-if ! grep "^\. /vagrant/.solidus-devbox/provision/\.bashrc" ~/.bashrc &> /dev/null; then
-  echo . /vagrant/.solidus-devbox/provision/.bashrc >> ~/.bashrc
-  . /vagrant/.solidus-devbox/provision/.bashrc
+bashrc_solidus_devbox=${HOME}/.bashrc_solidus_devbox
+echoerr cp /vagrant/.solidus-devbox/provision/.bashrc $bashrc_solidus_devbox
+echoerr dos2unix $bashrc_solidus_devbox
+if ! grep "^\. $bashrc_solidus_devbox" ~/.bashrc &> /dev/null; then
+  echo ". $bashrc_solidus_devbox" >> ~/.bashrc
+  . $bashrc_solidus_devbox
 fi
