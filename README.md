@@ -144,6 +144,14 @@ $ vagrant halt
 [See the CLI docs][vagrant-cli] for other commands.
 
 
+Troubleshooting
+-------------------
+
+### Windows: 'ssh' executable not found
+
+Vagrant needs an `ssh.exe` executable to log into the virtual machine when running `vagrant ssh`. Windows doesn't provide such an executable by default, but Git does. The easiest way to fix this problem is by adding Git's `bin` path to the system's `PATH` environment variable. In the Start menu, search for "system environment variables". Then locate the `PATH` system environment variable, click `Edit` and add Git's `bin` path (probably located in `C:\Program Files (x86)\Git\bin`). Note that you will need to restart your Command Prompt for the changes to take effect. Also, note that Git's own executables like `find.exe` will be now be used instead of Windows' default executables.
+
+
 [virtualbox]: https://www.virtualbox.org
 [vagrant]: http://www.vagrantup.com
 [vagrant-cli]: http://docs.vagrantup.com/v2/cli
