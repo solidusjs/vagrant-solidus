@@ -12,7 +12,7 @@ module VagrantPlugins
         def execute
           super do
             @env.ui.info("Stopping site...")
-            stop_site_service
+            stop_site
             uninstall_site_service
             uninstall_pow_site if pow_installed?
 

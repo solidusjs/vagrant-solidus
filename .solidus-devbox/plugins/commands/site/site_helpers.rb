@@ -4,6 +4,7 @@ module VagrantPlugins
       BASE_PORT = 8081
       BASE_LIVERELOAD_PORT = 35730
       SITE_TEMPLATE_GIT_URL = "https://github.com/solidusjs/solidus-site-template.git"
+      SITE_STATUS_WATCHER_POLLING_FREQUENCY = 1
 
       #########################################################################
       # System Calls
@@ -45,6 +46,13 @@ module VagrantPlugins
 
       def log(type, data)
         @env.ui.info(data, prefix: false, new_line: false, channel: type == :stdout ? :out : :error)
+      end
+
+      def with_mutex
+        @mutex ||= Mutex.new
+        @mutex.synchronize do
+          yield
+        end
       end
 
       #########################################################################
@@ -145,11 +153,8 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_service
-        conf = <<-EOS
-          start on vagrant-mounted MOUNTPOINT=#{ROOT_GUEST_PATH}
-          exec su - vagrant -c 'cd #{@site_guest_path} && grunt dev -port #{@site_port} -livereloadport #{@site_livereload_port} >> #{@site_log_file_guest_path} 2>&1'
-          EOS
-        guest_exec(:log_on_error, "echo \"#{conf.gsub(/^ */, '')}\" > /etc/init/#{site_service_name}.conf", sudo: true)
+        conf = "exec su - vagrant -c 'cd #{@site_guest_path} && grunt dev -port #{@site_port} -livereloadport #{@site_livereload_port} >> #{@site_log_file_guest_path} 2>&1'"
+        guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_service_name}.conf", sudo: true)
       end
 
       def uninstall_site_service
@@ -162,6 +167,11 @@ module VagrantPlugins
 
       def stop_site_service
         guest_exec(nil, "stop #{site_service_name}", sudo: true)
+      end
+
+      def stop_site
+        stop_site_service
+        wait_for_site_watcher_to_stop
       end
 
       def site_started?
@@ -203,6 +213,10 @@ module VagrantPlugins
       def start_site_watcher
         command = "vagrant site watch #{@site_name} -s"
         Process.detach(Process.spawn(command, chdir: ROOT_HOST_PATH))
+      end
+
+      def wait_for_site_watcher_to_stop
+        sleep(SITE_STATUS_WATCHER_POLLING_FREQUENCY)
       end
 
       #########################################################################
