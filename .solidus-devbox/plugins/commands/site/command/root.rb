@@ -57,6 +57,11 @@ module VagrantPlugins
             require File.expand_path("../watch", __FILE__)
             Watch
           end
+
+          @subcommands.register(:run) do
+            require File.expand_path("../run", __FILE__)
+            Run
+          end
         end
 
         def execute

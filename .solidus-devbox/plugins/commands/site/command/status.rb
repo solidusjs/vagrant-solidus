@@ -8,9 +8,7 @@ module VagrantPlugins
         def execute
           super do
             Dir[File.join(ROOT_HOST_PATH, '*')].each do |path|
-              @site_name = File.basename(path)
-              load_site
-              next unless validate_site
+              next unless load_and_validate_site(File.basename(path))
 
               if site_started?
                 @env.ui.success("#{@site_name} is started, accessible here:")
@@ -36,6 +34,7 @@ module VagrantPlugins
           end
 
           abort unless argv = parse_options(opts)
+          raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp unless argv.size == 0
         end
       end
     end

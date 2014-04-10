@@ -14,8 +14,12 @@ module VagrantPlugins
           site_template_command_line_options(opts)
         end
 
-        def validate_loaded_site
-          fail("Directory '#{@site_name}' already exists and is not empty") if directory_exists?(@site_host_path)
+        def invalid_site_message
+          "Directory '#{@site_name}' already exists and is not empty"
+        end
+
+        def validate_site
+          !directory_exists?(@site_host_path)
         end
 
         def execute
