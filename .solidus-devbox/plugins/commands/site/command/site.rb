@@ -13,8 +13,8 @@ module VagrantPlugins
         def options(opts)
         end
 
-        def validate_loaded_site
-          fail('Not a Solidus site') unless validate_site
+        def invalid_site_message
+          'Not a Solidus site'
         end
 
         def execute
@@ -63,18 +63,16 @@ module VagrantPlugins
           abort unless argv = parse_options(opts)
           raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp unless argv.size == 1
 
-          @site_name = parse_site_name(argv[0])
-          load_site
-          validate_loaded_site
+          load_and_validate_site!(argv[0])
         end
 
-        def parse_site_name(site_name)
-          site_name.chomp('/')
+        def load_and_validate_site!(site_name)
+          fail(invalid_site_message) unless load_and_validate_site(site_name)
         end
 
-        def fail(error)
-          @env.ui.error(error)
-          abort
+        def load_and_validate_site(site_name)
+          load_site(site_name)
+          validate_site
         end
       end
     end

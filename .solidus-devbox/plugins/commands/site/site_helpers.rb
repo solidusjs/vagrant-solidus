@@ -11,13 +11,15 @@ module VagrantPlugins
 
       def host_exec(log_type, *args)
         with_log(log_type) do
-          Vagrant::Util::Subprocess.execute(*args, {notify: [:stdout, :stderr]}, &method(:log_callback)).exit_code == 0
+          @last_exit_code = Vagrant::Util::Subprocess.execute(*args, {notify: [:stdout, :stderr]}, &method(:log_callback)).exit_code
+          @last_exit_code == 0
         end
       end
 
       def guest_exec(log_type, command, opts = {})
         with_log(log_type) do
-          @machine.communicate.execute(command, {error_check: false}.merge(opts), &method(:log_callback)) == 0
+          @last_exit_code = @machine.communicate.execute(command, {error_check: false}.merge(opts), &method(:log_callback))
+          @last_exit_code == 0
         end
       end
 
@@ -53,7 +55,8 @@ module VagrantPlugins
         @@sites ||= File.exists?(SITES_CONFIGS_FILE_HOST_PATH) ? JSON.load(File.new(SITES_CONFIGS_FILE_HOST_PATH)) : {}
       end
 
-      def load_site
+      def load_site(site_name)
+        @site_name                = site_name.chomp('/')
         @site_host_path           = File.join(ROOT_HOST_PATH, @site_name)
         @site_guest_path          = File.join(ROOT_GUEST_PATH, @site_name)
         @site_log_file_path       = ".solidus-devbox/log/#{@site_name}.log"
@@ -224,6 +227,11 @@ module VagrantPlugins
       #########################################################################
       # Misc
       #########################################################################
+
+      def fail(error)
+        @env.ui.error(error)
+        abort
+      end
 
       def wait_until_guest_directory_exists(directory)
         until guest_exec(nil, "cd #{directory}") do

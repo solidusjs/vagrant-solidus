@@ -116,6 +116,25 @@ $ vagrant site update my-site
 
 Note that this command will modify some of your site files. Make sure to review all changes applied to your files before committing those changes.
 
+### Running command line commands
+
+If you need to run custom commands for your site, for example [Grunt tasks][grunt], you will need to run them in the VM itself.
+
+Hard way (ssh into the VM and run your commands):
+
+```
+$ vagrant ssh
+$ cd my-site
+$ grunt my-task --option=something
+$ exit
+```
+
+Easy way (use the `run` command):
+
+```
+$ vagrant site run my-site grunt my-site --option=something
+```
+
 ### Are my sites running?
 
 ```
@@ -170,3 +189,4 @@ Vagrant needs an `ssh.exe` executable to log into the virtual machine when runni
 [download-pow]: http://pow.cx
 [download-anvil]: http://anvilformac.com
 [solidus-site-template]: https://github.com/solidusjs/solidus-site-template
+[grunt]: http://gruntjs.com
