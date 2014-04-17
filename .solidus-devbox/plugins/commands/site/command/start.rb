@@ -9,13 +9,21 @@ module VagrantPlugins
           opts.separator "Install and start the site. The site will be automatically restarted if the vm is restarted."
         end
 
+        def options(opts)
+          opts.on("-q", "--quick", "Quick mode. Don't install the site first.") do |url|
+            @quick = true
+          end
+        end
+
         def execute
           super do
-            @env.ui.info("Installing site...")
             stop_site_service
-            fail("Site could not be installed") unless install_site_node_packages
-            fail("Site could not be installed") unless install_site_service
-            install_pow_site if pow_installed?
+
+            unless @quick
+              @env.ui.info("Installing site...")
+              fail("Site could not be installed") unless install_site
+              install_pow_site if pow_installed?
+            end
 
             @env.ui.info("Starting dev server...")
             fail("Site could not be started") unless start_site_service
@@ -34,6 +42,12 @@ module VagrantPlugins
 
           # Success, exit status 0
           0
+        end
+
+        private
+
+        def install_site
+          install_site_dependencies && install_site_node_packages && install_site_service
         end
       end
     end

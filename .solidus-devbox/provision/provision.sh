@@ -36,9 +36,6 @@ echoerr rvm install ruby-1.9.3-p484
 echoerr rvm rvmrc warning ignore allGemfiles
 rvm use --default ruby-1.9.3-p484 > /dev/null # Using echoerr here doesn't work, mystery...
 
-echo "Installing sass"
-echoerr gem install sass
-
 echo "Installing dos2unix"
 echoerr sudo apt-get install -y dos2unix
 

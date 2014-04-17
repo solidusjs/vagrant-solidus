@@ -111,6 +111,15 @@ module VagrantPlugins
       end
 
       #########################################################################
+      # Site dependencies
+      #########################################################################
+
+      def install_site_dependencies
+        return unless guest_exec(:log_on_error, "gem install sass -N")
+        guest_exec(:log_on_error, "npm install bower -g")
+      end
+
+      #########################################################################
       # Node.js
       #########################################################################
 
