@@ -1,16 +1,19 @@
-require 'optparse'
 require_relative 'site'
 
 module VagrantPlugins
   module CommandSite
     module Command
       class Stop < SiteCommand
-        def description(opts)
-          opts.separator "Stop the site."
+        def parse_arguments
+          parse_argv do |opts|
+            opts.separator "Stop the site."
+            opts.separator ""
+            site_name_command_line_option(opts)
+          end
         end
 
         def execute
-          super do
+          with_running_vm do
             @env.ui.info("Stopping site...")
             stop_site
             uninstall_site_service

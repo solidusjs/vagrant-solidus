@@ -1,16 +1,19 @@
-require 'optparse'
 require_relative 'site'
 
 module VagrantPlugins
   module CommandSite
     module Command
       class Log < SiteCommand
-        def description(opts)
-          opts.separator "Follow the site's log file."
+        def parse_arguments
+          parse_argv do |opts|
+            opts.separator "Follow the site's log file."
+            opts.separator ""
+            site_name_command_line_option(opts)
+          end
         end
 
         def execute
-          super do
+          with_running_vm do
             @env.ui.info("Following #{@site_log_file_path} (press Ctrl+C to quit)...")
             follow_site_log
           end

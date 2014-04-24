@@ -63,8 +63,7 @@ module VagrantPlugins
         @@sites ||= File.exists?(SITES_CONFIGS_FILE_HOST_PATH) ? JSON.load(File.new(SITES_CONFIGS_FILE_HOST_PATH)) : {}
       end
 
-      def load_site(site_name)
-        @site_name                = site_name.chomp('/')
+      def load_site
         @site_host_path           = File.join(ROOT_HOST_PATH, @site_name)
         @site_guest_path          = File.join(ROOT_GUEST_PATH, @site_name)
         @site_log_file_path       = ".solidus-devbox/log/#{@site_name}.log"
@@ -207,7 +206,7 @@ module VagrantPlugins
       #########################################################################
 
       def start_site_watcher
-        command = "vagrant site watch #{@site_name} -s"
+        command = "vagrant site watch -s #{@site_name} -q"
         Process.detach(Process.spawn(command, chdir: ROOT_HOST_PATH))
       end
 
@@ -232,11 +231,50 @@ module VagrantPlugins
         fail("Site could not be created") unless guest_exec(:log_on_error, "cd #{@site_guest_path} && grunt-init --default=1 #{site_template_guest_path}")
       end
 
+      #########################################################################
+      # Command Line Options
+      #########################################################################
+
+      def site_name_command_line_option(opts)
+        @site_name = Pathname.pwd.relative_path_from(ROOT_HOST_PATH).to_s.split(File::SEPARATOR).first
+
+        opts.on("-s", "--site <site>", "Site to use, instead of the current directory.") do |site_name|
+          raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp if !site_name || site_name.empty?
+          @site_name = site_name.chomp('/')
+        end
+      end
+
+      def help_command_line_option(opts)
+        opts.on("-h", "--help", "Print this help") do
+          safe_puts(opts.help)
+          abort
+        end
+      end
+
+      def site_start_command_line_options(opts)
+        site_name_command_line_option(opts)
+        opts.on("-f", "--fast", "Fast mode. Don't install the site first.") do
+          @fast = true
+        end
+        opts.on("-d", "--deaf", "Don't listen to host file events and forward them to the guest (events will be much slower).") do
+          @deaf = true
+        end
+      end
+
+      def quiet_command_line_option(opts)
+        opts.on("-q", "--quiet", "Quiet mode. Don't output anything.") do
+          @quiet = true
+        end
+      end
+
       def site_template_command_line_options(opts)
-        opts.on("-g", "--template-git-url [URL]", "URL of the Solidus site template Git repository", "Default: #{SITE_TEMPLATE_GIT_URL}") do |url|
+        opts.on("-g", "--template-git-url <URL>", "URL of the Solidus site template Git repository", "Default: #{SITE_TEMPLATE_GIT_URL}") do |url|
+          raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp if !url || url.empty?
           @site_template_git_url = url
         end
-        opts.on("-p", "--template-path [PATH]", "Path of the Solidus site template to use, instead of the Git repository", "Must be relative to the Vagrantfile's directory") do |path|
+
+        opts.on("-p", "--template-path <path>", "Path of the Solidus site template to use, instead of the Git repository", "Must be relative to the Vagrantfile's directory") do |path|
+          raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp if !path || path.empty?
           @site_template_host_path  = File.join(ROOT_HOST_PATH, path)
           @site_template_guest_path = File.join(ROOT_GUEST_PATH, path)
         end

@@ -1,23 +1,12 @@
-require 'optparse'
-
 module VagrantPlugins
   module CommandSite
     module Command
       class SiteCommand < Vagrant.plugin("2", :command)
         include VagrantPlugins::CommandSite::SiteHelpers
 
-        def description(opts)
-          opts.separator "Override me!"
-        end
+        protected
 
-        def options(opts)
-        end
-
-        def invalid_site_message
-          'Not a Solidus site'
-        end
-
-        def execute
+        def with_running_vm
           initialize_env_constants
           parse_arguments
 
@@ -31,8 +20,6 @@ module VagrantPlugins
 
           fail("Virtual machine is not started, run `vagrant up` and try again") unless found
         end
-
-        protected
 
         def initialize_env_constants
           env = @env
@@ -50,28 +37,32 @@ module VagrantPlugins
           VagrantPlugins::CommandSite::SiteHelpers.send(:include, env_constants_module)
         end
 
-        def parse_arguments
+        def parse_argv(extra_argv_range = [0])
           opts = OptionParser.new do |opts|
             command = self.class.name.split('::').last.downcase
-            opts.banner = "Usage: vagrant site #{command} <site>"
+            opts.banner = "Usage: vagrant site #{command} [OPTIONS]"
             opts.separator ""
-            description(opts)
-            opts.separator ""
-            options(opts)
+            yield opts
+            help_command_line_option(opts)
           end
 
-          abort unless argv = parse_options(opts)
-          raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp unless argv.size == 1
+          begin
+            extra_argv = opts.order(ARGV[2..-1])
+          rescue OptionParser::InvalidOption
+            raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp
+          end
 
-          load_and_validate_site!(argv[0])
+          unless extra_argv_range.include?(extra_argv.size)
+            raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp
+          end
+
+          fail("Not a Solidus site: #{@site_host_path}") if @site_name && !load_and_validate_site
+
+          return extra_argv
         end
 
-        def load_and_validate_site!(site_name)
-          fail(invalid_site_message) unless load_and_validate_site(site_name)
-        end
-
-        def load_and_validate_site(site_name)
-          load_site(site_name)
+        def load_and_validate_site
+          load_site
           validate_site
         end
       end
