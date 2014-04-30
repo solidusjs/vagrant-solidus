@@ -168,6 +168,16 @@ $ vagrant halt
 
 [See the CLI docs][vagrant-cli] for other commands.
 
+### Resetting the VM
+
+If your virtual machine is in a weird state, the simplest solution is sometimes to rebuild it. All you need to do is destroy the VM, get the latest version of this repo, and rebuild:
+
+```
+$ vagrant destroy
+$ git pull
+$ vagrant up
+```
+
 
 Troubleshooting
 -------------------

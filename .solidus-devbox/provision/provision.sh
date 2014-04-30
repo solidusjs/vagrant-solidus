@@ -19,7 +19,7 @@ echo "Installing git"
 echoerr sudo apt-get install -y git
 
 echo "Installing nvm, node.js and npm"
-curl -s https://raw.github.com/creationix/nvm/master/install.sh | echoerr sh
+curl -s https://raw.githubusercontent.com/creationix/nvm/master/install.sh | echoerr sh
 source ~/.nvm/nvm.sh
 echoerr nvm install 0.10.22
 nvm use 0.10.22 > /dev/null # Using echoerr here doesn't work, mystery...
