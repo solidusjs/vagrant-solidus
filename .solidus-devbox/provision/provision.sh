@@ -19,25 +19,27 @@ echo "Installing git"
 echoerr sudo apt-get install -y git
 
 echo "Installing nvm, node.js and npm"
-curl -s https://raw.githubusercontent.com/creationix/nvm/master/install.sh | echoerr sh
+curl -s https://raw.githubusercontent.com/creationix/nvm/v0.5.1/install.sh | echoerr sh
 source ~/.nvm/nvm.sh
 echoerr nvm install 0.10.22
 nvm use 0.10.22 > /dev/null # Using echoerr here doesn't work, mystery...
 echoerr nvm alias default 0.10.22
 
 echo "Installing grunt.js"
-echoerr npm install -g grunt-cli
-echoerr npm install -g grunt-init@">=0.3.0" # We need 0.3.0 for the --default option
-
-echo "Installing rvm and ruby"
-curl -s -L https://get.rvm.io | echoerr bash
-source ~/.rvm/scripts/rvm
-echoerr rvm install ruby-1.9.3-p484
-echoerr rvm rvmrc warning ignore allGemfiles
-rvm use --default ruby-1.9.3-p484 > /dev/null # Using echoerr here doesn't work, mystery...
+echoerr npm install grunt-cli@"~0.1.13" -g
+echoerr npm install grunt-init@"~0.3.1" -g
 
 echo "Installing dos2unix"
 echoerr sudo apt-get install -y dos2unix
+
+echo "Setuping rubygems"
+echoerr dos2unix -n /vagrant/.solidus-devbox/provision/.gemrc ~/.gemrc
+
+echo "Installing rvm and ruby"
+curl -sSL https://get.rvm.io | echoerr bash -s stable --ruby=1.9.3-p545
+source ~/.rvm/scripts/rvm
+echoerr rvm rvmrc warning ignore allGemfiles
+rvm use --default ruby-1.9.3-p545 > /dev/null # Using echoerr here doesn't work, mystery...
 
 echo "Setuping bash"
 bashrc_solidus_devbox=${HOME}/.bashrc_solidus_devbox

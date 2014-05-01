@@ -123,8 +123,17 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_dependencies
-        return unless guest_exec(:log_on_error, "gem install sass -N")
-        guest_exec(:log_on_error, "npm install bower -g")
+        # Ruby gems
+        if File.exists?(File.join(@site_host_path, 'Gemfile'))
+          return unless guest_exec(:log_on_error, "cd #{@site_guest_path} && bundle install")
+        else
+          return unless guest_exec(:log_on_error, "gem install sass")
+        end
+
+        # Node packages
+        return unless guest_exec(:log_on_error, "npm install bower -g")
+
+        return true
       end
 
       #########################################################################
