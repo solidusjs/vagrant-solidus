@@ -1,8 +1,8 @@
 require_relative 'site'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
+  module Solidus
+    module Site
       class Create < SiteCommand
         def parse_arguments
           extra_argv = parse_argv([1]) do |opts|
