@@ -1,8 +1,8 @@
 module VagrantPlugins
-  module CommandSite
-    module Command
+  module Solidus
+    module Site
       class SiteCommand < Vagrant.plugin("2", :command)
-        include VagrantPlugins::CommandSite::SiteHelpers
+        include VagrantPlugins::Solidus::SiteHelpers
 
         protected
 
@@ -14,7 +14,8 @@ module VagrantPlugins
           with_target_vms do |machine|
             next unless machine.state.id == :running
             @machine = machine
-            found    = true
+            fail("Virtual machine needs to be provisioned, run `vagrant provision` and try again") unless provisioned?
+            found = true
             yield
           end
 
@@ -34,7 +35,7 @@ module VagrantPlugins
           end
 
           self.class.send(:include, env_constants_module)
-          VagrantPlugins::CommandSite::SiteHelpers.send(:include, env_constants_module)
+          VagrantPlugins::Solidus::SiteHelpers.send(:include, env_constants_module)
         end
 
         def parse_argv(extra_argv_range = [0])

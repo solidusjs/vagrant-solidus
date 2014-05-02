@@ -1,10 +1,11 @@
 module VagrantPlugins
-  module CommandSite
+  module Solidus
     module SiteHelpers
       BASE_PORT = 8081
       BASE_LIVERELOAD_PORT = 35730
       SITE_TEMPLATE_GIT_URL = "https://github.com/solidusjs/solidus-site-template.git"
       SITE_STATUS_WATCHER_POLLING_FREQUENCY = 1
+      PROVISION_ID = 20140502
 
       #########################################################################
       # System Calls
@@ -256,7 +257,7 @@ module VagrantPlugins
         opts.on("-f", "--fast", "Fast mode. Don't install the site first.") do
           @fast = true
         end
-        opts.on("-d", "--deaf", "Don't listen to host file events and forward them to the guest (events will be much slower).") do
+        opts.on("-d", "--deaf", "Don't automatically launch the `watch` command in background (file events will be much slower).") do
           @deaf = true
         end
       end
@@ -278,6 +279,18 @@ module VagrantPlugins
           @site_template_host_path  = File.join(ROOT_HOST_PATH, path)
           @site_template_guest_path = File.join(ROOT_GUEST_PATH, path)
         end
+      end
+
+      #########################################################################
+      # Provision
+      #########################################################################
+
+      def provisioned?
+        guest_exec(nil, "echo #{PROVISION_ID} | diff - ~/.solidus-devbox/provision")
+      end
+
+      def provisioned!
+        "mkdir -p ~/.solidus-devbox && echo #{PROVISION_ID} > ~/.solidus-devbox/provision"
       end
 
       #########################################################################
