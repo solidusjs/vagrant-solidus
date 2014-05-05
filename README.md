@@ -26,15 +26,11 @@ $ vagrant plugin install listen
 
 ### Windows
 
-In you are using Windows, additional steps are required. First, make sure you have the latest VirtualBox and Vagrant versions.
-
-Installing this Vagrant plugin will increase files watching performances:
+In you are using Windows, installing this Vagrant plugin will increase files watching performances:
 
 ```
 $ vagrant plugin install wdm
 ```
-
-Next, make sure you run the `vagrant` commands in a Command Prompt **as administrator**. Your sites will need symbolic links, which are only available for administrators.
 
 ### Up!
 

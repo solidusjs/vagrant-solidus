@@ -141,20 +141,7 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_node_packages
-        return unless create_guest_node_modules_symlink
         guest_exec(:log_on_error, "cd #{@site_guest_path} && npm install")
-      end
-
-      def create_guest_node_modules_symlink
-        # Create link target
-        target = "~/.solidus-devbox/node_modules/#{@site_name}"
-        return unless guest_exec(:log_on_error, "mkdir -p #{target}")
-
-        # Make sure link doesn't exist
-        link = File.join(@site_guest_path, 'node_modules')
-        return unless guest_exec(:log_on_error, "if [ -e #{link} ] ; then rm -r #{link} ; fi")
-
-        guest_exec(:log_on_error, "ln -s #{target} #{link}")
       end
 
       #########################################################################
@@ -243,7 +230,7 @@ module VagrantPlugins
         site_template_guest_path ||= SITE_TEMPLATE_GUEST_PATH
         fail("Site could not be created") unless guest_exec(:log_on_error, "mkdir -p #{@site_guest_path}")
         fail("Site could not be created") unless create_guest_node_modules_symlink
-        fail("Site could not be created") unless guest_exec(:log_on_error, "cd #{@site_guest_path} && grunt-init --default=1 --force #{site_template_guest_path}")
+        fail("Site could not be created") unless guest_exec(:log_on_error, "cd #{@site_guest_path} && grunt-init --default=1 #{site_template_guest_path}")
       end
 
       def site_template_command_line_options(opts)
