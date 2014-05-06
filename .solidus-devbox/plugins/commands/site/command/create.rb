@@ -1,29 +1,26 @@
-require 'optparse'
 require_relative 'site'
 
 module VagrantPlugins
   module CommandSite
     module Command
       class Create < SiteCommand
-        def description(opts)
-          opts.separator "Create a new Solidus site, based on a Solidus site template."
-          opts.separator "See https://github.com/solidusjs/solidus-site-template for more information."
-        end
+        def parse_arguments
+          extra_argv = parse_argv([1]) do |opts|
+            opts.banner << " <site>"
+            opts.separator "Create a new Solidus site, based on a Solidus site template."
+            opts.separator "See https://github.com/solidusjs/solidus-site-template for more information."
+            opts.separator ""
+            site_template_command_line_options(opts)
+          end
 
-        def options(opts)
-          site_template_command_line_options(opts)
-        end
+          @site_name = extra_argv[0]
 
-        def invalid_site_message
-          "Directory '#{@site_name}' already exists and is not empty"
-        end
-
-        def validate_site
-          !directory_exists?(@site_host_path)
+          load_site
+          fail("Directory already exists and is not empty: #{@site_host_path}") if directory_exists?(@site_host_path)
         end
 
         def execute
-          super do
+          with_running_vm do
             unless @site_template_guest_path
               @env.ui.info("Cloning site template...")
               clone_site_template(@site_template_git_url)

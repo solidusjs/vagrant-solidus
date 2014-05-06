@@ -1,21 +1,21 @@
-require 'optparse'
 require_relative 'site'
 
 module VagrantPlugins
   module CommandSite
     module Command
       class Update < SiteCommand
-        def description(opts)
-          opts.separator "Update the site to reflect the latest Solidus site template."
-          opts.separator "See https://github.com/solidusjs/solidus-site-template for more information."
-        end
-
-        def options(opts)
-          site_template_command_line_options(opts)
+        def parse_arguments
+          parse_argv do |opts|
+            opts.separator "Update the site to reflect the latest Solidus site template."
+            opts.separator "See https://github.com/solidusjs/solidus-site-template for more information."
+            opts.separator ""
+            site_name_command_line_option(opts)
+            site_template_command_line_options(opts)
+          end
         end
 
         def execute
-          super do
+          with_running_vm do
             confirm_command
 
             unless @site_template_host_path

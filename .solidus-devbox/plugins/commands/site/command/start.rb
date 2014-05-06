@@ -1,28 +1,22 @@
-require 'optparse'
 require_relative 'site'
 
 module VagrantPlugins
   module CommandSite
     module Command
       class Start < SiteCommand
-        def description(opts)
-          opts.separator "Install and start the site."
-        end
-
-        def options(opts)
-          opts.on("-q", "--quick", "Quick mode. Don't install the site first.") do |url|
-            @quick = true
-          end
-          opts.on("-d", "--deaf", "Don't listen to host file events and forward them to the guest (events will be much slower).") do |url|
-            @deaf = true
+        def parse_arguments
+          parse_argv do |opts|
+            opts.separator "Install and start the site."
+            opts.separator ""
+            site_start_command_line_options(opts)
           end
         end
 
         def execute
-          super do
+          with_running_vm do
             stop_site
 
-            unless @quick
+            unless @fast
               @env.ui.info("Installing site...")
               fail("Site could not be installed") unless install_site
               install_pow_site if pow_installed?

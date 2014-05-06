@@ -81,7 +81,8 @@ To work on an existing Solidus site, copy it or clone it to a sub-directory of t
 Once the site has been added, start the Solidus server (which will run within the virtual machine) with this command:
 
 ```
-$ vagrant site start my-site
+$ cd my-site
+$ vagrant site start
 ```
 
 You can now access the website on http://my-site.dev if you installed Pow. If not, look at the `start` command's output, the site's urls will have been displayed. Note that many sites can run at the same time.
@@ -93,13 +94,13 @@ Hint: Site files are actually stored on your machine, not in the virtual machine
 ### Stopping a site
 
 ```
-$ vagrant site stop my-site
+$ vagrant site stop
 ```
 
 ### Restarting a site
 
 ```
-$ vagrant site restart my-site
+$ vagrant site restart
 ```
 
 ### Updating a site
@@ -107,7 +108,7 @@ $ vagrant site restart my-site
 As the Solidus and Solidus site templates projects progress, you'll probably want to update your sites to use the latest versions of those repos. This is done with the `update` command:
 
 ```
-$ vagrant site update my-site
+$ vagrant site update
 ```
 
 Note that this command will modify some of your site files. Make sure to review all changes applied to your files before committing those changes.
@@ -128,7 +129,7 @@ $ exit
 Easy way (use the `run` command):
 
 ```
-$ vagrant site run my-site grunt my-site --option=something
+$ vagrant site run grunt my-site --option=something
 ```
 
 ### Are my sites running?
@@ -142,7 +143,7 @@ $ vagrant site status
 Run this command to follow the site's log:
 
 ```
-$ vagrant site log my-site
+$ vagrant site log
 ```
 
 ### Deleting a site
@@ -150,7 +151,8 @@ $ vagrant site log my-site
 Warning: you will obviously lose your local site files!
 
 ```
-$ vagrant site stop my-site
+$ vagrant site stop
+$ cd ..
 $ rm -rf my-site
 ```
 
