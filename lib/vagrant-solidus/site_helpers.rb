@@ -127,11 +127,15 @@ module VagrantPlugins
         if File.exists?(File.join(@site_host_path, 'Gemfile'))
           return unless guest_exec(:log_on_error, "cd #{@site_guest_path} && bundle install")
         else
+          # Until all sites use bundler...
           return unless guest_exec(:log_on_error, "gem install sass")
         end
 
-        # Node packages
-        return unless guest_exec(:log_on_error, "npm install bower -g")
+        # Bower packages
+        if File.exists?(File.join(@site_host_path, 'bower.json'))
+          return unless guest_exec(:log_on_error, "npm install bower -g")
+          return unless guest_exec(:log_on_error, "cd #{@site_guest_path} && bower install")
+        end
 
         return true
       end
