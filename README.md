@@ -4,10 +4,10 @@ This is a [Vagrant][vagrant] plugin that adds a [Solidus][solidus] provisioner a
 
 ## Getting Started
 
-### Install vagrant-solidus
+### Install vagrant-solidus-plugin
 
 ```
-$ vagrant plugin install vagrant-solidus
+$ vagrant plugin install vagrant-solidus-plugin
 ```
 
 ### [Install Pow][pow] (Mac only)
@@ -134,12 +134,12 @@ $ vagrant halt
 
 ### Updating
 
-To use the latest versions of solidus-devbox and vagrant-solidus, run this from the cloned repo directory:
+To use the latest versions of vagrant-solidus-box and vagrant-solidus-plugin, run this from the cloned repo directory:
 
 ```
 $ vagrant halt
 $ git pull
-$ vagrant plugin update vagrant-solidus
+$ vagrant plugin update vagrant-solidus-plugin
 $ vagrant up
 ```
 

@@ -5,5 +5,5 @@ group :development do
 end
 
 group :plugins do
-  gem "vagrant-solidus", path: "."
+  gem "vagrant-solidus-plugin", path: "."
 end

@@ -67,7 +67,7 @@ module VagrantPlugins
       def load_site
         @site_host_path           = File.join(ROOT_HOST_PATH, @site_name)
         @site_guest_path          = File.join(ROOT_GUEST_PATH, @site_name)
-        @site_log_file_path       = ".solidus-devbox/log/#{@site_name}.log"
+        @site_log_file_path       = ".vagrant-solidus-plugin/log/#{@site_name}.log"
         @site_log_file_guest_path = File.join(ROOT_GUEST_PATH, @site_log_file_path)
 
         if config = sites[@site_name]
@@ -290,11 +290,11 @@ module VagrantPlugins
       #########################################################################
 
       def provisioned?
-        guest_exec(nil, "echo #{PROVISION_ID} | diff - ~/.solidus-devbox/provision")
+        guest_exec(nil, "echo #{PROVISION_ID} | diff - ~/.vagrant-solidus-plugin/provision")
       end
 
       def provisioned!
-        "mkdir -p ~/.solidus-devbox && echo #{PROVISION_ID} > ~/.solidus-devbox/provision"
+        "mkdir -p ~/.vagrant-solidus-plugin && echo #{PROVISION_ID} > ~/.vagrant-solidus-plugin/provision"
       end
 
       #########################################################################

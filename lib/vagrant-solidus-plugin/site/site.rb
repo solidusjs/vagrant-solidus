@@ -9,6 +9,7 @@ module VagrantPlugins
         def with_running_vm
           initialize_env_constants
           parse_arguments
+          prepare_data_folders
 
           found = false
           with_target_vms do |machine|
@@ -27,15 +28,22 @@ module VagrantPlugins
           env_constants_module = Module.new do
             const_set :ROOT_HOST_PATH, env.root_path
             const_set :ROOT_GUEST_PATH, '/vagrant'
-            const_set :DATA_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.solidus-devbox/data')
-            const_set :DATA_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.solidus-devbox/data')
+            const_set :DATA_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus-plugin/data')
+            const_set :DATA_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus-plugin/data')
             const_set :SITE_TEMPLATE_HOST_PATH, File.join(self::DATA_HOST_PATH, 'solidus-site-template')
             const_set :SITE_TEMPLATE_GUEST_PATH, File.join(self::DATA_GUEST_PATH, 'solidus-site-template')
             const_set :SITES_CONFIGS_FILE_HOST_PATH, File.join(self::DATA_HOST_PATH, 'sites.json')
+            const_set :LOG_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus-plugin/log')
+            const_set :LOG_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus-plugin/log')
           end
 
           self.class.send(:include, env_constants_module)
           VagrantPlugins::Solidus::SiteHelpers.send(:include, env_constants_module)
+        end
+
+        def prepare_data_folders
+          FileUtils.mkdir_p VagrantPlugins::Solidus::SiteHelpers::DATA_HOST_PATH
+          FileUtils.mkdir_p VagrantPlugins::Solidus::SiteHelpers::LOG_HOST_PATH
         end
 
         def parse_argv(extra_argv_range = [0])
