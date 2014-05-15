@@ -1,8 +1,9 @@
 require_relative 'site'
+require 'listen'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
+  module Solidus
+    module Site
       class Watch < SiteCommand
         IGNORED_SITE_DIRECTORIES = [/\.sass-cache/, /deploy/, /node_modules/]
 

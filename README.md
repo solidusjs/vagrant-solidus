@@ -1,62 +1,30 @@
-Getting Started
----------------
+# Vagrant plugin for Solidus sites development
 
-This repo is designed to help you easily get Solidus sites running locally for development. We accomplish this largely by running everything within a Linux virtual machine. It’s easy to get up and running, time required is primarily to download everything, starting with the following:
+This is a [Vagrant][vagrant] plugin that adds a [Solidus][solidus] provisioner and command to manage Solidus sites. It enables you to easily create, run and update Solidus sites in the virtual machine without having to setup or log into the machine itself, through the vagrant command line interface.
 
-### [Install VirtualBox][download-virtualbox]
+## Getting Started
 
-[VirtualBox][virtualbox] is a free cross-platform virtualization app that makes it easy to simultaneously run multiple operating systems on your machine. In our usage it is merely a [provider][vagrant-providers] for Vagrant.
-
-### [Install Vagrant][download-vagrant]
-
-[Vagrant][vagrant] layers provisioning, file-based configuration, and a command-line interface on top of VirtualBox. This provides disposable, consistent environments for running development servers. [Synced Folders][vagrant-folders] and [Networking][vagrant-networking] features make the development experience the same as if running in your own environment: your own tools and whatever ports you’d like for access via your browser and other clients.
-
-### [Install Pow][download-pow] (Mac only)
-
-Among other things, Pow enables port proxying on your Mac, to let you route all web traffic on a particular hostname to another port on your computer. So you'll be able to access your site on `http://sitename.dev` instead of `http://localhost:8080` or `http://lvh.me:8080`. No need to remember weird urls with changing port numbers! Install [Anvil][download-anvil] to get a handy menubar extra showing all of your Pow-powered hosts.
-
-### Clone
-
-To get started, clone this repo, and install a required Vagrant plugin:
+### Install vagrant-solidus-plugin
 
 ```
-$ git clone https://github.com/solidusjs/solidus-devbox
-$ vagrant plugin install listen
+$ vagrant plugin install vagrant-solidus-plugin
 ```
 
-### Windows
+### [Install Pow][pow] (Mac only)
 
-In you are using Windows, installing this Vagrant plugin will increase files watching performances:
+Among other things, Pow enables port proxying on your Mac, to let you route all web traffic on a particular hostname to another port on your computer. So you'll be able to access your site on `http://sitename.dev` instead of `http://localhost:8081` or `http://lvh.me:8081`. No need to remember weird urls with changing port numbers! Install [Anvil][anvil] to get a handy menubar extra showing all of your Pow-powered hosts. This plugin will automatically configure Pow for your sites, if it is installed.
 
-```
-$ vagrant plugin install wdm
-```
+## Development Process
 
-### Up!
+A number of ports are automatically opened and forwarded to the virtual machine: `8081 to 8095` for the Solidus sites, and `35730 to 35744` for [LiveReload][livereload]. Whenever a site is started, two ports will be used for that site, so you can load them on your local browser.
 
-To start the virtual machine, simply go to the cloned repo and run:
-
-```
-$ vagrant up
-```
-
-This will boot the VM, and automatically install and configure everything that is required to run Solidus sites, a process called [Provisioning][vagrant-provisioning]: `Vagrantfile` defines a pre-built 64-bit Ubuntu 12.04.3 LTS (Precise) “box” provided by the Vagrant team. This file also defines basic configuration such as port mapping and synced folder locations, it can be updated at any time. New boxes are only downloaded to your machine the first time you provision a new VM however. Once the operating system is booted additional provisioning will occur, by running the `.solidus-devbox/provision/provision.sh` shell script. You can redo the provisioning process at any time by running `vagrant provision`.
-
-Feel free to make updates here and push to this repo!
-
-
-Development Process
--------------------
-
-### Site commands
-
-A few custom Vagrant commands have been added to help create and manage your Solidus sites. To see all commands:
+A new `site` Vagrant command has been added to help create and manage your Solidus sites. To see all available sub-commands:
 
 ```
 $ vagrant site
 ```
 
-Make sure to always be in the root of this repo when your run the commands. You never need to run commands from a site directory. For help on a specific command, use the `-h` argument. For example:
+For help on a specific command, use the `-h` argument. For example:
 
 ```
 $ vagrant site create -h
@@ -87,8 +55,6 @@ $ vagrant site start
 
 You can now access the website on http://my-site.dev if you installed Pow. If not, look at the `start` command's output, the site's urls will have been displayed. Note that many sites can run at the same time.
 
-Hint: Use your terminal autocomplete to type the site name, the trailing slash will be ignored by the vagrant command.
-
 Hint: Site files are actually stored on your machine, not in the virtual machine. You can edit them as usual, and the server will load them from your machine. Stopping or deleting the virtual machine will not affect your files.
 
 ### Stopping a site
@@ -115,7 +81,7 @@ Note that this command will modify some of your site files. Make sure to review 
 
 ### Running command line commands
 
-If you need to run custom commands for your site, for example [Grunt tasks][grunt], you will need to run them in the VM itself.
+If you need to run custom commands for your site, for example [Grunt tasks][gruntjs], you will need to run them in the VM itself.
 
 Hard way (ssh into the VM and run your commands):
 
@@ -166,35 +132,38 @@ $ vagrant halt
 
 [See the CLI docs][vagrant-cli] for other commands.
 
-### Resetting the VM
+### Updating
 
-If your virtual machine is in a weird state, the simplest solution is sometimes to rebuild it. All you need to do is destroy the VM, get the latest version of this repo, and rebuild:
+To use the latest versions of vagrant-solidus-box and vagrant-solidus-plugin, run this from the cloned repo directory:
 
 ```
-$ vagrant destroy
+$ vagrant halt
 $ git pull
+$ vagrant plugin update vagrant-solidus-plugin
 $ vagrant up
 ```
 
-
-Troubleshooting
--------------------
+## Troubleshooting ##
 
 ### Windows: 'ssh' executable not found
 
 Vagrant needs an `ssh.exe` executable to log into the virtual machine when running `vagrant ssh`. Windows doesn't provide such an executable by default, but Git does. The easiest way to fix this problem is by adding Git's `bin` path to the system's `PATH` environment variable. In the Start menu, search for "system environment variables". Then locate the `PATH` system environment variable, click `Edit` and add Git's `bin` path (probably located in `C:\Program Files (x86)\Git\bin`). Note that you will need to restart your Command Prompt for the changes to take effect. Also, note that Git's own executables like `find.exe` will be now be used instead of Windows' default executables.
 
+### Resetting the VM
 
-[virtualbox]: https://www.virtualbox.org
+If your virtual machine is in a weird state, the simplest solution is sometimes to rebuild it. All you need to do is destroy the VM and rebuild. This process will not delete your sites files, since they are hosted on your machine, not in the virtual machine.
+
+```
+$ vagrant destroy
+$ vagrant up
+```
+
+
 [vagrant]: http://www.vagrantup.com
-[vagrant-cli]: http://docs.vagrantup.com/v2/cli
-[vagrant-folders]: http://docs.vagrantup.com/v2/synced-folders
-[vagrant-networking]: http://docs.vagrantup.com/v2/networking
-[vagrant-providers]: http://docs.vagrantup.com/v2/providers
-[vagrant-provisioning]: http://docs.vagrantup.com/v2/provisioning/shell.html
-[download-virtualbox]: https://www.virtualbox.org/wiki/Downloads
-[download-vagrant]: http://downloads.vagrantup.com/tags/v1.3.5
-[download-pow]: http://pow.cx
-[download-anvil]: http://anvilformac.com
+[solidus]: https://github.com/solidusjs/solidus
+[pow]: http://pow.cx
+[anvil]: http://anvilformac.com
+[livereload]: http://livereload.com
 [solidus-site-template]: https://github.com/solidusjs/solidus-site-template
-[grunt]: http://gruntjs.com
+[gruntjs]: http://gruntjs.com
+[vagrant-cli]: http://docs.vagrantup.com/v2/cli

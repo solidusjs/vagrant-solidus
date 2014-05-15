@@ -1,8 +1,8 @@
 require_relative 'start'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
+  module Solidus
+    module Site
       # This is just an alias for the Start command...
       class Restart < Start
         def parse_arguments
