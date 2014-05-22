@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
   module Solidus
     module Site
-      class Status < SiteCommand
+      class Status < Subcommand
         def parse_arguments
           parse_argv do |opts|
             opts.separator "Show the current status of all available sites."

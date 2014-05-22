@@ -1,12 +1,19 @@
 module VagrantPlugins
   module Solidus
     module Site
-      class SiteCommand < Vagrant.plugin("2", :command)
+      class Subcommand < Vagrant.plugin('2', :command)
         include VagrantPlugins::Solidus::SiteHelpers
 
         protected
 
         def with_running_vm
+          unless @env.root_path
+            fail("A Vagrant environment is required to run this command. You can:
+                  - Run `vagrant solidus-box init` to create a Solidus Vagrantfile in this directory
+                  - Run `vagrant init` to create a default Vagrantfile in this directory
+                  - Change to a directory with a Vagrantfile".gsub(/^\s*/, ''))
+          end
+
           initialize_env_constants
           parse_arguments
           prepare_data_folders

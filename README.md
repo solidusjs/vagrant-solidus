@@ -4,15 +4,40 @@ This is a [Vagrant][vagrant] plugin that adds a [Solidus][solidus] provisioner a
 
 ## Getting Started
 
-### Install vagrant-solidus-plugin
+### [Install VirtualBox][virtualbox-install]
 
-```
-$ vagrant plugin install vagrant-solidus-plugin
-```
+[VirtualBox][virtualbox] is a free cross-platform virtualization app that makes it easy to simultaneously run multiple operating systems on your machine. In our usage it is merely a [provider][vagrant-provider] for Vagrant.
+
+### [Install Vagrant][vagrant-install]
+
+[Vagrant][vagrant] layers provisioning, file-based configuration, and a command-line interface on top of VirtualBox. This provides disposable, consistent environments for running development servers. [Synced Folders][vagrant-synced-folders] and [Networking][vagrant-networking] features make the development experience the same as if running in your own environment: your own tools and whatever ports you’d like for access via your browser and other clients.
 
 ### [Install Pow][pow] (Mac only)
 
 Among other things, Pow enables port proxying on your Mac, to let you route all web traffic on a particular hostname to another port on your computer. So you'll be able to access your site on `http://sitename.dev` instead of `http://localhost:8081` or `http://lvh.me:8081`. No need to remember weird urls with changing port numbers! Install [Anvil][anvil] to get a handy menubar extra showing all of your Pow-powered hosts. This plugin will automatically configure Pow for your sites, if it is installed.
+
+### Create the Vagrant environment
+
+Using this plugin, you can easily create a `Vagrantfile` ready for Solidus:
+
+```
+$ vagrant plugin install vagrant-solidus-plugin
+$ mkdir solidus
+$ cd solidus
+$ vagrant solidus-box init
+```
+
+### Up!
+
+You are now ready to start the virtual machine:
+
+```
+$ vagrant up
+```
+
+This will boot the VM, and automatically install and configure everything that is required to run Solidus sites, a process called [Provisioning][vagrant-provisioning]: `Vagrantfile` defines a pre-built 64-bit Ubuntu 12.04.3 LTS (Precise) “box” provided by the Vagrant team. This file also defines basic configuration such as port mapping and synced folder locations, it can be updated at any time. New boxes are only downloaded to your machine the first time you provision a new VM however. Once the operating system is booted, this plugin will perform additional provisioning. You can redo the provisioning process at any time by running `vagrant provision`.
+
+At this point, you are ready to work on your Solidus site!
 
 ## Development Process
 
@@ -134,12 +159,12 @@ $ vagrant halt
 
 ### Updating
 
-To use the latest versions of vagrant-solidus-box and vagrant-solidus-plugin, run this from the cloned repo directory:
+To use the latest version of vagrant-solidus-plugin, simply update the plugin and re-initialize your `Vagrantfile`:
 
 ```
 $ vagrant halt
-$ git pull
 $ vagrant plugin update vagrant-solidus-plugin
+$ vagrant solidus-box init
 $ vagrant up
 ```
 
@@ -158,8 +183,15 @@ $ vagrant destroy
 $ vagrant up
 ```
 
-
+[virtualbox]: https://www.virtualbox.org
+[virtualbox-install]: https://www.virtualbox.org/wiki/Downloads
 [vagrant]: http://www.vagrantup.com
+[vagrantfile]: https://docs.vagrantup.com/v2/vagrantfile/
+[vagrant-provider]: http://docs.vagrantup.com/v2/providers
+[vagrant-install]: http://www.vagrantup.com/downloads.html
+[vagrant-synced-folders]: http://docs.vagrantup.com/v2/synced-folders/index.html
+[vagrant-networking]: http://docs.vagrantup.com/v2/networking/index.html
+[vagrant-provisioning]: http://docs.vagrantup.com/v2/provisioning/index.html
 [solidus]: https://github.com/solidusjs/solidus
 [pow]: http://pow.cx
 [anvil]: http://anvilformac.com

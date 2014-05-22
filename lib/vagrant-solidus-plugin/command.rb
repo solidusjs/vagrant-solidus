@@ -2,7 +2,15 @@ module VagrantPlugins
   module Solidus
     class Command < Vagrant.plugin('2', :command)
       def self.synopsis
-        'manages Solidus sites'
+        'command description'
+      end
+
+      def command
+        'the-command'
+      end
+
+      def subcommands
+        %w[the subcommands]
       end
 
       def initialize(argv, env)
@@ -11,10 +19,10 @@ module VagrantPlugins
         @main_args, @sub_command, @sub_args = split_main_and_subcommand(argv)
 
         @subcommands = Vagrant::Registry.new
-        %w[create log restart run start status stop update watch].each do |subcommand|
+        subcommands.each do |subcommand|
           @subcommands.register(subcommand.to_sym) do
-            require_relative "site/#{subcommand}"
-            eval("Site::#{subcommand.capitalize}")
+            require_relative "#{command}/#{subcommand}"
+            eval((self.class.to_s.split('::')[0...-1] + [subcommand.capitalize]).join('::'))
           end
         end
       end
@@ -38,7 +46,7 @@ module VagrantPlugins
       # Prints the help out for this command
       def help
         opts = OptionParser.new do |opts|
-          opts.banner = "Usage: vagrant site <command> [<args>]"
+          opts.banner = "Usage: vagrant #{command} SUBCOMMAND [OPTIONS]"
           opts.separator ""
           opts.separator "Available subcommands:"
 
@@ -52,7 +60,7 @@ module VagrantPlugins
           end
 
           opts.separator ""
-          opts.separator "For help on any individual command run `vagrant site COMMAND -h`"
+          opts.separator "For help on any individual subcommand run `vagrant #{command} SUBCOMMAND -h`"
         end
 
         @env.ui.info(opts.help, :prefix => false)

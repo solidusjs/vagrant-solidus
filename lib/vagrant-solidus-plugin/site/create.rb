@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
   module Solidus
     module Site
-      class Create < SiteCommand
+      class Create < Subcommand
         def parse_arguments
           extra_argv = parse_argv([1]) do |opts|
             opts.banner << " <site>"

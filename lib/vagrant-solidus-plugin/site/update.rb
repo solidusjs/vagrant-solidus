@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
   module Solidus
     module Site
-      class Update < SiteCommand
+      class Update < Subcommand
         def parse_arguments
           parse_argv do |opts|
             opts.separator "Update the site to reflect the latest Solidus site template."

@@ -1,10 +1,10 @@
-require_relative 'site'
+require_relative 'subcommand'
 require 'listen'
 
 module VagrantPlugins
   module Solidus
     module Site
-      class Watch < SiteCommand
+      class Watch < Subcommand
         IGNORED_SITE_DIRECTORIES = [/\.sass-cache/, /deploy/, /node_modules/]
 
         def parse_arguments

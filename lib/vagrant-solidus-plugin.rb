@@ -13,8 +13,13 @@ module VagrantPlugins
       end
 
       command(:site) do
-        require_relative 'vagrant-solidus-plugin/command'
-        Command
+        require_relative 'vagrant-solidus-plugin/site/command'
+        Site::Command
+      end
+
+      command('solidus-box') do
+        require_relative 'vagrant-solidus-plugin/solidus-box/command'
+        SolidusBox::Command
       end
     end
   end
