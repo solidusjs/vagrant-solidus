@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
-      class Run < SiteCommand
+  module Solidus
+    module Site
+      class Run < Subcommand
         def parse_arguments
           extra_argv = parse_argv(1..Float::INFINITY) do |opts|
             opts.banner << " <command>"

@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
-      class Log < SiteCommand
+  module Solidus
+    module Site
+      class Log < Subcommand
         def parse_arguments
           parse_argv do |opts|
             opts.separator "Follow the site's log file."

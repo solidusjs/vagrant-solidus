@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
-      class Stop < SiteCommand
+  module Solidus
+    module Site
+      class Stop < Subcommand
         def parse_arguments
           parse_argv do |opts|
             opts.separator "Stop the site."

@@ -1,9 +1,9 @@
-require_relative 'site'
+require_relative 'subcommand'
 
 module VagrantPlugins
-  module CommandSite
-    module Command
-      class Start < SiteCommand
+  module Solidus
+    module Site
+      class Start < Subcommand
         def parse_arguments
           parse_argv do |opts|
             opts.separator "Install and start the site."
