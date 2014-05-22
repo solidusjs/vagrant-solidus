@@ -1,5 +1,5 @@
-require_relative 'vagrant-solidus-plugin/site_helpers'
-require_relative 'vagrant-solidus-plugin/version'
+require_relative 'vagrant-solidus/site_helpers'
+require_relative 'vagrant-solidus/version'
 
 module VagrantPlugins
   module Solidus
@@ -8,17 +8,17 @@ module VagrantPlugins
       description 'This plugin provides a provisioner and a `site` command that allows Solidus sites to be managed by Vagrant.'
 
       provisioner(:solidus) do
-        require_relative 'vagrant-solidus-plugin/provisioner'
+        require_relative 'vagrant-solidus/provisioner'
         Provisioner
       end
 
       command(:site) do
-        require_relative 'vagrant-solidus-plugin/site/command'
+        require_relative 'vagrant-solidus/site/command'
         Site::Command
       end
 
       command('solidus-box') do
-        require_relative 'vagrant-solidus-plugin/solidus-box/command'
+        require_relative 'vagrant-solidus/solidus-box/command'
         SolidusBox::Command
       end
     end

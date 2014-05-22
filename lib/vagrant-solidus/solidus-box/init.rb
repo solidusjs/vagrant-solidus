@@ -23,7 +23,7 @@ module VagrantPlugins
 
         def parse_arguments
           opts = OptionParser.new do |opts|
-            opts.banner = "Usage: vagrant solidus-site init"
+            opts.banner = "Usage: vagrant solidus-box init"
             opts.separator ""
             opts.separator "Create a `Vagrantfile` prepared for Solidus."
             opts.separator ""

@@ -35,13 +35,13 @@ module VagrantPlugins
           env_constants_module = Module.new do
             const_set :ROOT_HOST_PATH, env.root_path
             const_set :ROOT_GUEST_PATH, '/vagrant'
-            const_set :DATA_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus-plugin/data')
-            const_set :DATA_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus-plugin/data')
+            const_set :DATA_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus/data')
+            const_set :DATA_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus/data')
             const_set :SITE_TEMPLATE_HOST_PATH, File.join(self::DATA_HOST_PATH, 'solidus-site-template')
             const_set :SITE_TEMPLATE_GUEST_PATH, File.join(self::DATA_GUEST_PATH, 'solidus-site-template')
             const_set :SITES_CONFIGS_FILE_HOST_PATH, File.join(self::DATA_HOST_PATH, 'sites.json')
-            const_set :LOG_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus-plugin/log')
-            const_set :LOG_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus-plugin/log')
+            const_set :LOG_HOST_PATH, File.join(self::ROOT_HOST_PATH, '.vagrant-solidus/log')
+            const_set :LOG_GUEST_PATH, File.join(self::ROOT_GUEST_PATH, '.vagrant-solidus/log')
           end
 
           self.class.send(:include, env_constants_module)

@@ -59,11 +59,11 @@ module VagrantPlugins
         execute('rvm use --default ruby-1.9.3-p545')
 
         @env.ui.info('Configuring bash')
-        @machine.communicate.upload(File.expand_path('provisioner/.bashrc', File.dirname(__FILE__)), '/home/vagrant/.bashrc-vagrant-solidus-plugin')
-        execute('dos2unix -o ~/.bashrc-vagrant-solidus-plugin')
-        unless guest_exec(nil, 'grep "^\. ~/.bashrc-vagrant-solidus-plugin" ~/.bashrc')
-          execute('echo ". ~/.bashrc-vagrant-solidus-plugin" >> ~/.bashrc')
-          execute('. ~/.bashrc-vagrant-solidus-plugin')
+        @machine.communicate.upload(File.expand_path('provisioner/.bashrc', File.dirname(__FILE__)), '/home/vagrant/.bashrc-vagrant-solidus')
+        execute('dos2unix -o ~/.bashrc-vagrant-solidus')
+        unless guest_exec(nil, 'grep "^\. ~/.bashrc-vagrant-solidus" ~/.bashrc')
+          execute('echo ". ~/.bashrc-vagrant-solidus" >> ~/.bashrc')
+          execute('. ~/.bashrc-vagrant-solidus')
         end
 
         execute(provisioned!)

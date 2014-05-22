@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'vagrant-solidus-plugin/version'
+require 'vagrant-solidus/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "vagrant-solidus-plugin"
+  spec.name          = "vagrant-solidus"
   spec.version       = VagrantPlugins::Solidus::VERSION
   spec.authors       = ["Joannic Laborde"]
   spec.email         = ["joannic@sparkart.com"]
   spec.summary       = "This plugin provides a provisioner and a `site` command that allows Solidus sites to be managed by Vagrant."
-  spec.homepage      = "https://github.com/solidusjs/vagrant-solidus-plugin"
+  spec.homepage      = "https://github.com/solidusjs/vagrant-solidus"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

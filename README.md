@@ -21,7 +21,7 @@ Among other things, Pow enables port proxying on your Mac, to let you route all 
 Using this plugin, you can easily create a `Vagrantfile` ready for Solidus:
 
 ```
-$ vagrant plugin install vagrant-solidus-plugin
+$ vagrant plugin install vagrant-solidus
 $ mkdir solidus
 $ cd solidus
 $ vagrant solidus-box init
@@ -159,11 +159,11 @@ $ vagrant halt
 
 ### Updating
 
-To use the latest version of vagrant-solidus-plugin, simply update the plugin and re-initialize your `Vagrantfile`:
+To use the latest version of vagrant-solidus, simply update the plugin and re-initialize your `Vagrantfile`:
 
 ```
 $ vagrant halt
-$ vagrant plugin update vagrant-solidus-plugin
+$ vagrant plugin update vagrant-solidus
 $ vagrant solidus-box init
 $ vagrant up
 ```
