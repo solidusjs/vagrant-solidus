@@ -1,5 +1,5 @@
 # Requirements
-Vagrant.require_version '>= 1.5.0'
+Vagrant.require_version '>= 1.5.0', '< 1.6.0' # Until this is resolved: https://github.com/mitchellh/vagrant/issues/3769
 unless Vagrant.has_plugin?('vagrant-solidus')
   abort "\033[31mVagrant needs an additional plugin for this box, run `vagrant plugin install vagrant-solidus` and try again\033[0m"
 end
