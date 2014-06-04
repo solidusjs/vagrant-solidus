@@ -188,7 +188,7 @@ $ vagrant up
 [vagrant]: http://www.vagrantup.com
 [vagrantfile]: https://docs.vagrantup.com/v2/vagrantfile/
 [vagrant-provider]: http://docs.vagrantup.com/v2/providers
-[vagrant-install]: http://www.vagrantup.com/downloads.html
+[vagrant-install]: http://www.vagrantup.com/download-archive/v1.5.4.html
 [vagrant-synced-folders]: http://docs.vagrantup.com/v2/synced-folders/index.html
 [vagrant-networking]: http://docs.vagrantup.com/v2/networking/index.html
 [vagrant-provisioning]: http://docs.vagrantup.com/v2/provisioning/index.html
