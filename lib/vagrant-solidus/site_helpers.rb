@@ -2,7 +2,7 @@ module VagrantPlugins
   module Solidus
     module SiteHelpers
       BASE_PORT = 8081
-      BASE_LIVERELOAD_PORT = 35730
+      BASE_UTILS_PORT = 35730
       SITE_TEMPLATE_GIT_URL = "https://github.com/solidusjs/solidus-site-template.git"
       SITE_STATUS_WATCHER_POLLING_FREQUENCY = 1
       PROVISION_ID = 20140502
@@ -73,14 +73,16 @@ module VagrantPlugins
         if config = sites[@site_name]
           @site_port            = config['port']
           @site_livereload_port = config['livereload-port']
+          @site_log_server_port = config['log-server-port']
         end
 
-        @site_port            ||= find_next_available_port('port', BASE_PORT)
-        @site_livereload_port ||= find_next_available_port('livereload-port', BASE_LIVERELOAD_PORT)
+        @site_port            ||= find_next_available_port(BASE_PORT)
+        @site_livereload_port ||= find_next_available_port(BASE_UTILS_PORT)
+        @site_log_server_port ||= find_next_available_port(BASE_UTILS_PORT)
       end
 
-      def find_next_available_port(type, port)
-        ports = sites.values.map {|config| config[type]}
+      def find_next_available_port(port)
+        ports = sites.values.map(&:values).flatten + [@site_port, @site_livereload_port, @site_log_server_port].compact
         loop do
           return port unless ports.index(port)
           port += 1
@@ -94,7 +96,7 @@ module VagrantPlugins
       end
 
       def save_site
-        config = {'port' => @site_port, 'livereload-port' => @site_livereload_port}
+        config = {'port' => @site_port, 'livereload-port' => @site_livereload_port, 'log-server-port' => @site_log_server_port}
         File.open(SITES_CONFIGS_FILE_HOST_PATH, 'w') do |file|
           file.write(JSON.pretty_generate(sites.merge(@site_name => config)))
         end
@@ -153,7 +155,7 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_service
-        conf = "exec su - vagrant -c 'cd #{@site_guest_path} && grunt dev -port #{@site_port} -livereloadport #{@site_livereload_port} >> #{@site_log_file_guest_path} 2>&1'"
+        conf = "exec su - vagrant -c 'cd #{@site_guest_path} && grunt dev -port #{@site_port} -livereloadport #{@site_livereload_port} -logserverport #{@site_log_server_port} -loglevel 3 >> #{@site_log_file_guest_path} 2>&1'"
         guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_service_name}.conf", sudo: true)
       end
 

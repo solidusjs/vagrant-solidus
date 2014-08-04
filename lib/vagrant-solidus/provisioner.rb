@@ -9,8 +9,10 @@ module VagrantPlugins
           port = VagrantPlugins::Solidus::SiteHelpers::BASE_PORT + i
           root_config.vm.network :forwarded_port, guest: port, host: port
 
-          port = VagrantPlugins::Solidus::SiteHelpers::BASE_LIVERELOAD_PORT + i
-          root_config.vm.network :forwarded_port, guest: port, host: port
+          2.times do |j|
+            port = VagrantPlugins::Solidus::SiteHelpers::BASE_UTILS_PORT + (2 * i) + j
+            root_config.vm.network :forwarded_port, guest: port, host: port
+          end
         end
       end
 
