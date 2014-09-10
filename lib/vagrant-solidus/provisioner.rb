@@ -39,8 +39,7 @@ module VagrantPlugins
         execute('nvm use 0.10.22')
         execute('nvm alias default 0.10.22')
 
-        @env.ui.info('Installing grunt.js')
-        execute('npm install grunt-cli@"~0.1.13" -g')
+        @env.ui.info('Installing grunt-init')
         execute('npm install grunt-init@"~0.3.1" -g')
 
         @env.ui.info('Configuring rubygems')
