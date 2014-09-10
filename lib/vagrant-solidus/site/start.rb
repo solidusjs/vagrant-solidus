@@ -24,7 +24,10 @@ module VagrantPlugins
             fail("Site could not be installed") unless install_site_service
             install_pow_site if pow_installed?
 
-            @env.ui.info("Starting dev server...")
+            @env.ui.info("Compiling assets...")
+            fail("Assets could not be compiled") unless compile_site_assets
+
+            @env.ui.info("Starting dev server and assets watcher...")
             fail("Site could not be started") unless start_site_service
 
             if site_responding?
@@ -34,7 +37,8 @@ module VagrantPlugins
               @env.ui.success("#{@site_name} is started, accessible here:")
               log_site_urls
             else
-              log_site_log_tail(10)
+              @env.ui.info("...")
+              log_site_log_tail(50)
               fail("Site could not be started")
             end
           end

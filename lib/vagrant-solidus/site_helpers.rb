@@ -83,7 +83,7 @@ module VagrantPlugins
         return unless @site_port            = find_port(@site_port,            all.site_ports,       used.map {|c| c['port']})
         return unless @site_livereload_port = find_port(@site_livereload_port, all.livereload_ports, used.map {|c| c['livereload-port']})
         return unless @site_log_server_port = find_port(@site_log_server_port, all.log_server_ports, used.map {|c| c['log-server-port']})
-        true
+        return true
       end
 
       def find_port(current_port, all_ports, used_ports)
@@ -91,9 +91,7 @@ module VagrantPlugins
       end
 
       def validate_site
-        gruntfile = File.join(@site_host_path, 'Gruntfile.js')
-        package   = File.join(@site_host_path, 'package.json')
-        File.exists?(gruntfile) && File.exists?(package) && File.read(package).index('solidus')
+        JSON.load(File.new(File.join(@site_host_path, 'package.json')))['dependencies']['solidus'] rescue false
       end
 
       def save_site
@@ -156,12 +154,33 @@ module VagrantPlugins
       #########################################################################
 
       def install_site_service
-        conf = "exec su - vagrant -c 'cd #{@site_guest_path} && grunt dev -port #{@site_port} -livereloadport #{@site_livereload_port} -logserverport #{@site_log_server_port} -loglevel 3 >> #{@site_log_file_guest_path} 2>&1'"
-        guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_service_name}.conf", sudo: true)
+        command = "exec su - vagrant -c 'cd #{@site_guest_path} &&"
+        logging = ">> #{@site_log_file_guest_path} 2>&1'"
+
+        conf = ""
+        return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_service_name}.conf", sudo: true)
+
+        conf = "start on starting #{site_service_name}
+                stop on stopping #{site_service_name}
+                #{command} npm #{site_commands_arguments} run watch #{logging}"
+        return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{assets_watcher_service_name}.conf", sudo: true)
+
+        conf = "start on starting #{site_service_name}
+                stop on stopping #{site_service_name}
+                #{command} ./node_modules/.bin/solidus start --dev --loglevel=3 #{site_commands_arguments} #{logging}"
+        return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{solidus_server_service_name}.conf", sudo: true)
+
+        return true
       end
 
       def uninstall_site_service
         guest_exec(nil, "rm /etc/init/#{site_service_name}.conf", sudo: true)
+        guest_exec(nil, "rm /etc/init/#{assets_watcher_service_name}.conf", sudo: true)
+        guest_exec(nil, "rm /etc/init/#{solidus_server_service_name}.conf", sudo: true)
+      end
+
+      def compile_site_assets
+        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm #{site_commands_arguments} run build")
       end
 
       def start_site_service
@@ -191,6 +210,18 @@ module VagrantPlugins
 
       def site_service_name
         "site-#{@site_name}"
+      end
+
+      def assets_watcher_service_name
+        "#{site_service_name}-assets-watcher"
+      end
+
+      def solidus_server_service_name
+        "#{site_service_name}-server"
+      end
+
+      def site_commands_arguments
+        "--port=#{@site_port} --livereloadport=#{@site_livereload_port} --logserverport=#{@site_log_server_port}"
       end
 
       #########################################################################

@@ -1,3 +1,24 @@
+## Unreleased
+
+ - Use npm scripts instead of grunt
+
+BREAKING CHANGES:
+
+ - vagrant-solidus no longer manages the Solidus sites using the `grunt` command line. Instead, each site is started directly with its local Solidus bin (`./node_modules/.bin/solidus`). For sites that need to compile assets and run a file watcher, new scripts need to be added to their `package.json` files. For example, existing `grunt` tasks can still be used, but they need to be called directly with the two new special npm scripts:
+
+  ```javascript
+  {
+    "scripts": {
+      "build": "./node_modules/.bin/grunt build",
+      "watch": "./node_modules/.bin/grunt watch"
+    },
+    "devDependencies": {
+      "grunt": "~0.4.1",
+      "grunt-cli": "~0.1.13"
+    }
+  }
+  ```
+
 ## 0.2.1 (Nov 19, 2014)
 
  - Restore Vagrant >1.6.3 support [[460291e](https://github.com/solidusjs/vagrant-solidus/commit/460291e0338e3deefe87873fc1b3e70b6882bd67)]

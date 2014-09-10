@@ -39,8 +39,7 @@ module VagrantPlugins
         execute('nvm use 0.10.22')
         execute('nvm alias default 0.10.22')
 
-        @env.ui.info('Installing grunt.js')
-        execute('npm install grunt-cli@"~0.1.13" -g')
+        @env.ui.info('Installing grunt-init')
         execute('npm install grunt-init@"~0.3.1" -g')
 
         @env.ui.info('Configuring rubygems')
@@ -53,6 +52,12 @@ module VagrantPlugins
         execute('source ~/.rvm/scripts/rvm')
         execute('rvm rvmrc warning ignore allGemfiles')
         execute('rvm use --default ruby-1.9.3-p545')
+
+        @env.ui.info('Updating libstdc++')
+        execute('apt-get -y install python-software-properties', sudo: true)
+        execute('add-apt-repository -y ppa:ubuntu-toolchain-r/test', sudo: true)
+        execute('apt-get update', sudo: true)
+        execute('DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade', sudo: true)
 
         @env.ui.info('Configuring bash')
         @machine.communicate.upload(File.expand_path('provisioner/.bashrc', File.dirname(__FILE__)), '/home/vagrant/.bashrc-vagrant-solidus')
