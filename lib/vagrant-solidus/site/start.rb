@@ -16,11 +16,13 @@ module VagrantPlugins
           with_running_vm do
             stop_site
 
+            @env.ui.info("Installing site...")
             unless @fast
-              @env.ui.info("Installing site...")
-              fail("Site could not be installed") unless install_site
-              install_pow_site if pow_installed?
+              fail("Site could not be installed") unless install_site_dependencies && install_site_node_packages
             end
+            fail("Out of available ports, add more to the Vagrantfile or remove unused sites from #{SITES_CONFIGS_FILE_HOST_PATH}") unless set_site_ports
+            fail("Site could not be installed") unless install_site_service
+            install_pow_site if pow_installed?
 
             @env.ui.info("Starting dev server...")
             fail("Site could not be started") unless start_site_service
@@ -39,12 +41,6 @@ module VagrantPlugins
 
           # Success, exit status 0
           0
-        end
-
-        private
-
-        def install_site
-          install_site_dependencies && install_site_node_packages && install_site_service
         end
       end
     end

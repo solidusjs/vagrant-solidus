@@ -7,6 +7,11 @@ module VagrantPlugins
       name 'Solidus'
       description 'This plugin provides a provisioner and a `site` command that allows Solidus sites to be managed by Vagrant.'
 
+      config(:solidus) do
+        require_relative 'vagrant-solidus/config'
+        Config
+      end
+
       provisioner(:solidus) do
         require_relative 'vagrant-solidus/provisioner'
         Provisioner

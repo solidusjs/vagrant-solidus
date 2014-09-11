@@ -4,15 +4,8 @@ module VagrantPlugins
       include VagrantPlugins::Solidus::SiteHelpers
 
       def configure(root_config)
-        # TODO: Make this configurable
-        15.times do |i|
-          port = VagrantPlugins::Solidus::SiteHelpers::BASE_PORT + i
+        (root_config.solidus.site_ports + root_config.solidus.livereload_ports + root_config.solidus.log_server_ports).each do |port|
           root_config.vm.network :forwarded_port, guest: port, host: port
-
-          2.times do |j|
-            port = VagrantPlugins::Solidus::SiteHelpers::BASE_UTILS_PORT + (2 * i) + j
-            root_config.vm.network :forwarded_port, guest: port, host: port
-          end
         end
       end
 

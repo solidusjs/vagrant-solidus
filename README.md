@@ -183,6 +183,16 @@ $ vagrant destroy
 $ vagrant up
 ```
 
+### Adding or changing the forwarded ports
+
+When a site is started, it requires 3 forwarded ports for the Solidus server, the log server and LiveReload. By default, 45 ports are forwarded when the box is started. Once a site has been started, its used ports will be reserved for later use. If you run out of ports, or if a default port is already used by another application on your machine, you can manage them directly in the Vagrantfile, with the following config variables, which should be arrays of available ports. Note that the box should be reloaded if those values are changed.
+
+* `config.solidus.site_ports`
+* `config.solidus.livereload_ports`
+* `config.solidus.log_server_ports`
+
+It's also possible to remove ports reserved by older unused sites. The reserved ports are listed in this file: `.vagrant-solidus/data/sites.json`.
+
 [virtualbox]: https://www.virtualbox.org
 [virtualbox-install]: https://www.virtualbox.org/wiki/Downloads
 [vagrant]: http://www.vagrantup.com
