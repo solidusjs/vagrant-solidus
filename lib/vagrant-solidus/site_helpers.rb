@@ -75,18 +75,19 @@ module VagrantPlugins
           @site_livereload_port = config['livereload-port']
           @site_log_server_port = config['log-server-port']
         end
-
-        @site_port            ||= find_next_available_port(BASE_PORT)
-        @site_livereload_port ||= find_next_available_port(BASE_UTILS_PORT)
-        @site_log_server_port ||= find_next_available_port(BASE_UTILS_PORT)
       end
 
-      def find_next_available_port(port)
-        ports = sites.values.map(&:values).flatten + [@site_port, @site_livereload_port, @site_log_server_port].compact
-        loop do
-          return port unless ports.index(port)
-          port += 1
-        end
+      def set_site_ports
+        all  = @machine.config.solidus
+        used = sites.values
+        return unless @site_port            = find_port(@site_port,            all.site_ports,       used.map {|c| c['port']})
+        return unless @site_livereload_port = find_port(@site_livereload_port, all.livereload_ports, used.map {|c| c['livereload-port']})
+        return unless @site_log_server_port = find_port(@site_log_server_port, all.log_server_ports, used.map {|c| c['log-server-port']})
+        true
+      end
+
+      def find_port(current_port, all_ports, used_ports)
+        all_ports.include?(current_port) ? current_port : (all_ports - used_ports).first
       end
 
       def validate_site
@@ -260,7 +261,7 @@ module VagrantPlugins
 
       def site_start_command_line_options(opts)
         site_name_command_line_option(opts)
-        opts.on("-f", "--fast", "Fast mode. Don't install the site first.") do
+        opts.on("-f", "--fast", "Fast mode. Don't install the site dependencies first.") do
           @fast = true
         end
         opts.on("-d", "--deaf", "Don't automatically launch the `watch` command in background (file events will be much slower).") do

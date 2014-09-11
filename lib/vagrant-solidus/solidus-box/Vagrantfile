@@ -27,4 +27,13 @@ Vagrant.configure('2') do |config|
   # The vagrant-solidus plugin handles the rest, see:
   #   https://github.com/solidusjs/vagrant-solidus
   config.vm.provision :solidus
+
+  # List of available ports for the Solidus sites, reload the box if you change this
+  #config.solidus.site_ports = [...]
+
+  # List of available ports for LiveReload, reload the box if you change this
+  #config.solidus.livereload_ports = [...]
+
+  # List of available ports for the Solidus log servers, reload the box if you change this
+  #config.solidus.log_server_ports = [...]
 end
