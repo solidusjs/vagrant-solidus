@@ -53,6 +53,12 @@ module VagrantPlugins
         execute('rvm rvmrc warning ignore allGemfiles')
         execute('rvm use --default ruby-1.9.3-p545')
 
+        @env.ui.info('Updating libstdc++')
+        execute('apt-get -y install python-software-properties', sudo: true)
+        execute('add-apt-repository -y ppa:ubuntu-toolchain-r/test', sudo: true)
+        execute('apt-get update', sudo: true)
+        execute('DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade', sudo: true)
+
         @env.ui.info('Configuring bash')
         @machine.communicate.upload(File.expand_path('provisioner/.bashrc', File.dirname(__FILE__)), '/home/vagrant/.bashrc-vagrant-solidus')
         execute('dos2unix -o ~/.bashrc-vagrant-solidus')
