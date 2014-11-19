@@ -48,6 +48,7 @@ module VagrantPlugins
         execute('dos2unix -o ~/.gemrc')
 
         @env.ui.info('Installing rvm and ruby')
+        execute('gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3')
         execute('curl -sSL https://get.rvm.io | bash -s stable --ruby=1.9.3-p545')
         execute('source ~/.rvm/scripts/rvm')
         execute('rvm rvmrc warning ignore allGemfiles')
