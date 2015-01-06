@@ -168,6 +168,20 @@ $ vagrant solidus-box init
 $ vagrant up
 ```
 
+### Installing a Specific Version
+
+To use a specific version of vagrant-solidus, you can do the following;
+
+```
+$ vagrant halt
+$ vagrant plugin uninstall vagrant-solidus
+$ vagrant plugin install vagrant-solidus --plugin-version 1.0.0.rc1
+$ vagrant solidus-box init
+$ vagrant up
+```
+
+Replacing `1.0.0.rc1` with [the version number you want](https://rubygems.org/gems/vagrant-solidus).
+
 ## Troubleshooting ##
 
 ### Windows: 'ssh' executable not found
