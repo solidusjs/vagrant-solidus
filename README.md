@@ -82,6 +82,25 @@ You can now access the website on http://my-site.dev if you installed Pow. If no
 
 Hint: Site files are actually stored on your machine, not in the virtual machine. You can edit them as usual, and the server will load them from your machine. Stopping or deleting the virtual machine will not affect your files.
 
+#### package.json
+
+In order for a site to be started by this plugin, it only needs one thing: a `package.json` file, with a dependency on Solidus. Two optional scripts can also be added to the `package.json` file:
+ - `compile-assets`: called when the site is started, for example to compile sass files
+ - `watch-assets`: called when the site is started, to automatically recompile the assets when they change
+
+See the [solidus-site-template's `package.json`](https://github.com/solidusjs/solidus-site-template/blob/master/root/package.json) for an example.
+
+#### Site installation steps
+
+When a site is started with `vagrant site start`, the following steps are executed:
+
+ - If the site has a `Gemfile` file, the bundle is installed, else only the `sass` gem is installed
+ - If the site has a `bower.json` file, the `bower` packages are installed
+ - The site's `npm` packages are installed
+ - The site's assets are compiled (see [package.json](#packagejson)): `npm --port=PORT --livereloadport=PORT --logserverport=PORT run compile-assets`
+ - The site's assets are watched (see [package.json](#packagejson)): `npm --port=PORT --livereloadport=PORT --logserverport=PORT run watch-assets`
+ - The site is started, by calling the site's local `solidus` bin: `./node_modules/.bin/solidus start --dev --loglevel=3 --port=PORT --livereloadport=PORT --logserverport=PORT`
+
 ### Stopping a site
 
 ```
