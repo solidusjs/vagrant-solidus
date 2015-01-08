@@ -9,8 +9,8 @@ BREAKING CHANGES:
   ```javascript
   {
     "scripts": {
-      "compile-assets": "./node_modules/.bin/grunt compile-assets",
-      "watch-assets": "./node_modules/.bin/grunt watch-assets"
+      "build": "./node_modules/.bin/grunt build",
+      "watch": "./node_modules/.bin/grunt watch"
     },
     "devDependencies": {
       "grunt": "~0.4.1",

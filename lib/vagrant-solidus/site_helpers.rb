@@ -162,7 +162,7 @@ module VagrantPlugins
 
         conf = "start on starting #{site_service_name}
                 stop on stopping #{site_service_name}
-                #{command} npm #{site_commands_arguments} run watch-assets #{logging}"
+                #{command} npm #{site_commands_arguments} run watch #{logging}"
         return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{assets_watcher_service_name}.conf", sudo: true)
 
         conf = "start on starting #{site_service_name}
@@ -180,7 +180,7 @@ module VagrantPlugins
       end
 
       def compile_site_assets
-        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm #{site_commands_arguments} run compile-assets")
+        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm #{site_commands_arguments} run build")
       end
 
       def start_site_service
