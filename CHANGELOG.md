@@ -1,6 +1,7 @@
 ## Unreleased
 
  - Use npm scripts instead of grunt
+ - Create/update site from specific tag on cloned template repo
 
 BREAKING CHANGES:
 

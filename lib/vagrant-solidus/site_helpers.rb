@@ -4,6 +4,7 @@ module VagrantPlugins
       BASE_PORT = 8081
       BASE_UTILS_PORT = 35730
       SITE_TEMPLATE_GIT_URL = "https://github.com/solidusjs/solidus-site-template.git"
+      SITE_TEMPLATE_GIT_TAG = "v1.0.0"
       SITE_STATUS_WATCHER_POLLING_FREQUENCY = 1
       PROVISION_ID = 20140502
 
@@ -258,9 +259,12 @@ module VagrantPlugins
       #########################################################################
 
       def clone_site_template(site_template_git_url)
-        site_template_git_url ||= SITE_TEMPLATE_GIT_URL
         FileUtils.rm_rf(SITE_TEMPLATE_HOST_PATH)
-        fail("Site template could not be cloned") unless host_exec(:log_on_error, "git", "clone", site_template_git_url, SITE_TEMPLATE_HOST_PATH)
+        if site_template_git_url
+          fail("Site template could not be cloned") unless host_exec(:log_on_error, "git", "clone", site_template_git_url, SITE_TEMPLATE_HOST_PATH)
+        else
+          fail("Site template could not be cloned") unless host_exec(:log_on_error, "git", "clone", "--branch", SITE_TEMPLATE_GIT_TAG, SITE_TEMPLATE_GIT_URL, SITE_TEMPLATE_HOST_PATH)
+        end
         wait_until_guest_directory_exists(SITE_TEMPLATE_GUEST_PATH)
       end
 
@@ -307,7 +311,7 @@ module VagrantPlugins
       end
 
       def site_template_command_line_options(opts)
-        opts.on("-g", "--template-git-url <URL>", "URL of the Solidus site template Git repository", "Default: #{SITE_TEMPLATE_GIT_URL}") do |url|
+        opts.on("-g", "--template-git-url <URL>", "URL of the Solidus site template Git repository", "Default: #{SITE_TEMPLATE_GIT_URL}, #{SITE_TEMPLATE_GIT_TAG} tag") do |url|
           raise Vagrant::Errors::CLIInvalidUsage, help: opts.help.chomp if !url || url.empty?
           @site_template_git_url = url
         end
