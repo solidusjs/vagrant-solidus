@@ -1,7 +1,7 @@
-## Unreleased
+## 1.0.0 (Jan 14, 2015)
 
- - Use npm scripts instead of grunt
- - Create/update site from specific tag on cloned template repo
+ - Use npm scripts instead of grunt [[a626484](https://github.com/solidusjs/vagrant-solidus/commit/a626484dbd6a17122c4d5dd0d4afb39b62ce38ed)]
+ - Create/update site from specific tag on cloned template repo [[1b3075b](https://github.com/solidusjs/vagrant-solidus/commit/1b3075b00a06422281ec4f321126b6d42d0e1af6)]
 
 BREAKING CHANGES:
 
