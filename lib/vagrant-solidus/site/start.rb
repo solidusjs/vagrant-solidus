@@ -24,10 +24,10 @@ module VagrantPlugins
             fail("Site could not be installed") unless install_site_service
             install_pow_site if pow_installed?
 
-            @env.ui.info("Compiling assets...")
-            fail("Assets could not be compiled") unless compile_site_assets
+            @env.ui.info("Building site...")
+            fail("Site could not be built") unless build_site
 
-            @env.ui.info("Starting dev server and assets watcher...")
+            @env.ui.info("Starting site server and watcher...")
             fail("Site could not be started") unless start_site_service
 
             if site_responding?

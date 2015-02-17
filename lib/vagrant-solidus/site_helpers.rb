@@ -164,7 +164,7 @@ module VagrantPlugins
         conf = "start on starting #{site_service_name}
                 stop on stopping #{site_service_name}
                 #{command} npm #{site_commands_arguments} run watch #{logging}"
-        return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{assets_watcher_service_name}.conf", sudo: true)
+        return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_watcher_service_name}.conf", sudo: true)
 
         conf = "start on starting #{site_service_name}
                 stop on stopping #{site_service_name}
@@ -176,11 +176,11 @@ module VagrantPlugins
 
       def uninstall_site_service
         guest_exec(nil, "rm /etc/init/#{site_service_name}.conf", sudo: true)
-        guest_exec(nil, "rm /etc/init/#{assets_watcher_service_name}.conf", sudo: true)
+        guest_exec(nil, "rm /etc/init/#{site_watcher_service_name}.conf", sudo: true)
         guest_exec(nil, "rm /etc/init/#{solidus_server_service_name}.conf", sudo: true)
       end
 
-      def compile_site_assets
+      def build_site
         guest_exec(:log_on_error, "cd #{@site_guest_path} && npm #{site_commands_arguments} run build")
       end
 
@@ -213,7 +213,7 @@ module VagrantPlugins
         "site-#{@site_name}"
       end
 
-      def assets_watcher_service_name
+      def site_watcher_service_name
         "#{site_service_name}-assets-watcher"
       end
 
