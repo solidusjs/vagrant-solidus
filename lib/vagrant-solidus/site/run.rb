@@ -17,7 +17,7 @@ module VagrantPlugins
 
         def execute
           with_running_vm do
-            guest_exec(:log_all, "cd #{@site_guest_path} && #{@guest_command}")
+            guest_exec(:log_all, "cd #{@site_guest_path} && #{node_command} #{@guest_command}")
           end
 
           # Command's exit status

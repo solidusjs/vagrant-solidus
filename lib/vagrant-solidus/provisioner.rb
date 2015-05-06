@@ -32,12 +32,18 @@ module VagrantPlugins
         @env.ui.info('Installing dos2unix')
         execute('apt-get -y install dos2unix', sudo: true)
 
-        @env.ui.info('Installing nvm, node.js and npm')
-        execute('curl -s https://raw.githubusercontent.com/creationix/nvm/v0.5.1/install.sh | sh')
+        @env.ui.info('Installing nvm')
+        execute('curl -s https://raw.githubusercontent.com/creationix/nvm/v0.25.1/install.sh | sh')
         execute('source ~/.nvm/nvm.sh')
-        execute('nvm install 0.10.22')
-        execute('nvm use 0.10.22')
-        execute('nvm alias default 0.10.22')
+
+        # Install a default node.js version, it will be used for grunt-init and when ssh'ing into the box
+        @env.ui.info('Installing node.js')
+        execute("nvm install #{DEFAULT_NODE_VERSION}")
+        execute("nvm use #{DEFAULT_NODE_VERSION}")
+        execute("nvm alias default #{DEFAULT_NODE_VERSION}")
+
+        @env.ui.info('Installing npm')
+        execute("npm install npm@'#{DEFAULT_NPM_VERSION}' -g")
 
         @env.ui.info('Installing grunt-init')
         execute('npm install grunt-init@"~0.3.1" -g')
