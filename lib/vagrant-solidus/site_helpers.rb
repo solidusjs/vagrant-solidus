@@ -72,6 +72,7 @@ module VagrantPlugins
         @site_guest_path          = File.join(ROOT_GUEST_PATH, @site_name)
         @site_log_file_path       = ".vagrant-solidus/log/#{@site_name}.log"
         @site_log_file_guest_path = File.join(ROOT_GUEST_PATH, @site_log_file_path)
+        @package                  = JSON.load(File.new(File.join(@site_host_path, 'package.json'))) rescue {}
 
         if config = sites[@site_name]
           @site_port            = config['port']
@@ -94,7 +95,7 @@ module VagrantPlugins
       end
 
       def validate_site
-        !package['dependencies']['solidus'].empty? rescue false
+        !@package['dependencies']['solidus'].empty? rescue false
       end
 
       def save_site
@@ -158,7 +159,7 @@ module VagrantPlugins
 
       def node_version
         unless @node_version
-          @node_version = package['engines']['node'] if package['engines']
+          @node_version = @package['engines']['node'] if @package['engines']
           @node_version = DEFAULT_NODE_VERSION if !@node_version || @node_version.empty?
         end
         @node_version
@@ -170,14 +171,10 @@ module VagrantPlugins
 
       def npm_version
         unless @npm_version
-          @npm_version = package['engines']['npm'] if package['engines']
+          @npm_version = @package['engines']['npm'] if @package['engines']
           @npm_version = DEFAULT_NPM_VERSION if !@npm_version || @npm_version.empty?
         end
         @npm_version
-      end
-
-      def package
-        @package ||= JSON.load(File.new(File.join(@site_host_path, 'package.json')))
       end
 
       #########################################################################
