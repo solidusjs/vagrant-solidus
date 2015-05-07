@@ -1,3 +1,7 @@
+## 2.0.1 (May 7, 2015)
+
+ - Fix status command [[07741d6](https://github.com/solidusjs/vagrant-solidus/commit/07741d63646598a233235e393f067632e78ec8d5)]
+
 ## 2.0.0 (May 7, 2015)
 
  - Update start messages to reflect new script names [[565ac76](https://github.com/solidusjs/vagrant-solidus/commit/565ac76e72bc1a13413ebb62d331fd172c199932)]
