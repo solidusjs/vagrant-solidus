@@ -7,6 +7,8 @@ module VagrantPlugins
       SITE_TEMPLATE_GIT_TAG = "v1.0.0"
       SITE_STATUS_WATCHER_POLLING_FREQUENCY = 1
       PROVISION_ID = 20140502
+      DEFAULT_NODE_VERSION = 'stable'
+      DEFAULT_NPM_VERSION = '^2.0.0'
 
       #########################################################################
       # System Calls
@@ -92,7 +94,7 @@ module VagrantPlugins
       end
 
       def validate_site
-        JSON.load(File.new(File.join(@site_host_path, 'package.json')))['dependencies']['solidus'] rescue false
+        !package['dependencies']['solidus'].empty? rescue false
       end
 
       def save_site
@@ -135,8 +137,8 @@ module VagrantPlugins
 
         # Bower packages
         if File.exists?(File.join(@site_host_path, 'bower.json'))
-          return unless guest_exec(:log_on_error, "npm install bower -g")
-          return unless guest_exec(:log_on_error, "cd #{@site_guest_path} && bower install")
+          return unless guest_exec(:log_on_error, "#{node_command} npm install bower -g")
+          return unless guest_exec(:log_on_error, "cd #{@site_guest_path} && #{node_command} bower install")
         end
 
         return true
@@ -146,8 +148,36 @@ module VagrantPlugins
       # Node.js
       #########################################################################
 
+      def install_site_node
+        guest_exec(:log_on_error, "nvm install #{node_version} && #{node_command} npm install npm@'#{npm_version}' -g")
+      end
+
       def install_site_node_packages
-        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm install")
+        guest_exec(:log_on_error, "cd #{@site_guest_path} && #{node_command} npm install")
+      end
+
+      def node_version
+        unless @node_version
+          @node_version = package['engines']['node'] if package['engines']
+          @node_version = DEFAULT_NODE_VERSION if !@node_version || @node_version.empty?
+        end
+        @node_version
+      end
+
+      def node_command
+        "nvm exec #{node_version}"
+      end
+
+      def npm_version
+        unless @npm_version
+          @npm_version = package['engines']['npm'] if package['engines']
+          @npm_version = DEFAULT_NPM_VERSION if !@npm_version || @npm_version.empty?
+        end
+        @npm_version
+      end
+
+      def package
+        @package ||= JSON.load(File.new(File.join(@site_host_path, 'package.json')))
       end
 
       #########################################################################
@@ -163,12 +193,12 @@ module VagrantPlugins
 
         conf = "start on starting #{site_service_name}
                 stop on stopping #{site_service_name}
-                #{command} npm #{site_commands_arguments} run watch #{logging}"
+                #{command} #{node_command} npm #{site_commands_arguments} run watch #{logging}"
         return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{site_watcher_service_name}.conf", sudo: true)
 
         conf = "start on starting #{site_service_name}
                 stop on stopping #{site_service_name}
-                #{command} ./node_modules/.bin/solidus start --dev --loglevel=3 #{site_commands_arguments} #{logging}"
+                #{command} #{node_command} ./node_modules/.bin/solidus start --dev --loglevel=3 #{site_commands_arguments} #{logging}"
         return unless guest_exec(:log_on_error, "echo \"#{conf}\" > /etc/init/#{solidus_server_service_name}.conf", sudo: true)
 
         return true
@@ -181,7 +211,7 @@ module VagrantPlugins
       end
 
       def build_site
-        guest_exec(:log_on_error, "cd #{@site_guest_path} && npm #{site_commands_arguments} run build")
+        guest_exec(:log_on_error, "cd #{@site_guest_path} && #{node_command} npm #{site_commands_arguments} run build")
       end
 
       def start_site_service

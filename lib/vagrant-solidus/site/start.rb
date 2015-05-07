@@ -18,9 +18,9 @@ module VagrantPlugins
 
             @env.ui.info("Installing site...")
             unless @fast
-              fail("Site could not be installed") unless install_site_dependencies && install_site_node_packages
+              fail("Site could not be installed") unless install_site_dependencies && install_site_node && install_site_node_packages
             end
-            fail("Out of available ports, add more to the Vagrantfile or remove unused sites from #{SITES_CONFIGS_FILE_HOST_PATH}") unless set_site_ports
+            fail("Out of available ports, add more to the Vagrantfile or remove unused sites from #{SITES_CONFIGS_FILE_HOST_PATH}\nSee https://github.com/solidusjs/vagrant-solidus#adding-or-changing-the-forwarded-ports") unless set_site_ports
             fail("Site could not be installed") unless install_site_service
             install_pow_site if pow_installed?
 
