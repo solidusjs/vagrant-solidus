@@ -90,6 +90,10 @@ In order for a site to be started by this plugin, it only needs one thing: a `pa
 
 See the [solidus-site-template's `package.json`](https://github.com/solidusjs/solidus-site-template/blob/master/root/package.json) for an example.
 
+#### Node and npm versions
+
+By default, vagrant-solidus will use Node version `stable` and npm version `^2.0.0`. To use different versions, specify them in the `package.json` [`engines` field](https://docs.npmjs.com/files/package.json#engines).
+
 #### Site installation steps
 
 When a site is started with `vagrant site start`, the following steps are executed:

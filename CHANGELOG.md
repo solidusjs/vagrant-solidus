@@ -1,3 +1,13 @@
+## 2.0.0 (May 7, 2015)
+
+ - Update start messages to reflect new script names [[565ac76](https://github.com/solidusjs/vagrant-solidus/commit/565ac76e72bc1a13413ebb62d331fd172c199932)]
+ - Use site's node and npm versions from package.json [[a3f4c19](https://github.com/solidusjs/vagrant-solidus/commit/a3f4c19a50766623c26209012c59d219223e298c)]
+
+BREAKING CHANGES:
+
+ - The default Node version goes from `0.10.22` to `stable`
+ - The default npm version goes from `1.3.14` to `^2.0.0`
+
 ## 1.0.0 (Jan 14, 2015)
 
  - Use npm scripts instead of grunt [[a626484](https://github.com/solidusjs/vagrant-solidus/commit/a626484dbd6a17122c4d5dd0d4afb39b62ce38ed)]
