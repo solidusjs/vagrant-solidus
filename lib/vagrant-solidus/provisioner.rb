@@ -33,8 +33,11 @@ module VagrantPlugins
         execute('apt-get -y install dos2unix', sudo: true)
 
         @env.ui.info('Installing nvm')
-        execute('curl -s https://raw.githubusercontent.com/creationix/nvm/v0.25.1/install.sh | sh')
-        execute('source ~/.nvm/nvm.sh')
+        execute('curl -s -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.1/install.sh | bash')
+        unless guest_exec(nil, 'grep NVM_DIR ~/.profile')
+          execute('echo \'export NVM_DIR="/home/vagrant/.nvm"\' >> ~/.profile')
+          execute('echo \'[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm\' >> ~/.profile')
+        end
 
         # Install a default node.js version, it will be used for grunt-init and when ssh'ing into the box
         @env.ui.info('Installing node.js')
@@ -58,6 +61,9 @@ module VagrantPlugins
         execute('source ~/.rvm/scripts/rvm')
         execute('rvm rvmrc warning ignore allGemfiles')
         execute('rvm use --default ruby-1.9.3-p545')
+
+        @env.ui.info('Installing bundler')
+        execute('gem install bundler')
 
         @env.ui.info('Updating libstdc++')
         execute('apt-get -y install python-software-properties', sudo: true)
