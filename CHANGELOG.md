@@ -1,3 +1,7 @@
+## 2.0.2 (May 7, 2015)
+
+ - Load nvm in non-interactive shells, install bundler in provisioner [[fde6873](https://github.com/solidusjs/vagrant-solidus/commit/fde6873241d1975adef9a5e3866714c08385fa81)]
+
 ## 2.0.1 (May 7, 2015)
 
  - Fix status command [[07741d6](https://github.com/solidusjs/vagrant-solidus/commit/07741d63646598a233235e393f067632e78ec8d5)]
