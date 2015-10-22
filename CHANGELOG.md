@@ -1,4 +1,4 @@
-## Unreleased
+## 2.0.3 (Oct 22, 2015)
 
  - Fix Listen usage, to support Vagrant 1.7.3, which updated its dependency from 2.8.0 to 3.0.2
 
