@@ -1,6 +1,6 @@
 ## 2.0.3 (Oct 22, 2015)
 
- - Fix Listen usage, to support Vagrant 1.7.3, which updated its dependency from 2.8.0 to 3.0.2
+ - Fix Listen usage, to support Vagrant 1.7.3, which updated its dependency from 2.8.0 to 3.0.2 [[52d9f84](https://github.com/solidusjs/vagrant-solidus/commit/52d9f8473940ff5ce99ae4e3a3b7042fd59782fd)]
 
 ## 2.0.2 (May 7, 2015)
 
