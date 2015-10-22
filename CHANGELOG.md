@@ -1,3 +1,7 @@
+## Unreleased
+
+ - Fix Listen usage, to support Vagrant 1.7.3, which updated its dependency from 2.8.0 to 3.0.2
+
 ## 2.0.2 (May 7, 2015)
 
  - Load nvm in non-interactive shells, install bundler in provisioner [[fde6873](https://github.com/solidusjs/vagrant-solidus/commit/fde6873241d1975adef9a5e3866714c08385fa81)]

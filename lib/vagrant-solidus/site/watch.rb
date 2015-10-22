@@ -43,7 +43,7 @@ module VagrantPlugins
         end
 
         def wait_until_listener_or_site_is_stopped
-          while @listener.listen?
+          while @listener.processing?
             if with_mutex {site_started? rescue false}
               sleep(SITE_STATUS_WATCHER_POLLING_FREQUENCY)
             else
